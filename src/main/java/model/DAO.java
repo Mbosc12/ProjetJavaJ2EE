@@ -38,9 +38,9 @@ public class DAO {
      * @return Liste des catégories
      * @throws SQLException
      */
-    public HashMap<Integer, Categorie> allCategories() throws SQLException {
+    public List<CategorieEntity> allCategories() throws SQLException {
 
-        HashMap<Integer, Categorie> result = new HashMap<Integer, Categorie>();
+        List<CategorieEntity> result = new LinkedList<>();
 
         String sql = "SELECT * FROM APP.CATEGORIE";
         
@@ -51,14 +51,13 @@ public class DAO {
             while (rs.next()) {
                 String lib = rs.getString("LIBELLE");
                 String desc = rs.getString("DESCRIPTION");
-                int code = rs.getInt("CODE");
-                Categorie c = new Categorie(lib, desc);
-                result.put(code, c);
+                CategorieEntity categorie = new CategorieEntity(lib, desc);
+                result.add(categorie);
             }
 
-        } catch (SQLException var37) {
-            Logger.getLogger("DAO").log(Level.SEVERE, (String)null, var37);
-            throw new SQLException(var37.getMessage());
+        } catch (SQLException error) {
+            Logger.getLogger("DAO").log(Level.SEVERE, (String)null, error);
+            throw new SQLException(error.getMessage());
         }
 
         return result;
@@ -70,9 +69,9 @@ public class DAO {
      * @return Liste des articles vendus par l'entreprise
      * @throws SQLException
      */
-    public List<String> itemSold(String enterpriseName) throws SQLException {
-        List<String> result = new LinkedList<>();
-        String sql = "SELECT DISTINCT REFERENCE, NOM " +
+    public List<ProduitEntity> itemSold(String enterpriseName) throws SQLException {
+        List<ProduitEntity> result = new LinkedList<>();
+        String sql = "SELECT DISTINCT PRIX_UNITAIRE, NOM " +
                 "FROM APP.PRODUIT, APP.LIGNE, APP.COMMANDE " +
                 "WHERE APP.PRODUIT.REFERENCE=APP.LIGNE.PRODUIT " +
                 "AND APP.LIGNE.COMMANDE=APP.COMMANDE.NUMERO " +
@@ -86,12 +85,14 @@ public class DAO {
 
             while(rs.next()) {
                 String nom = rs.getString("NOM");
-                result.add(nom);
+                Float prix = rs.getFloat("PRIX_UNITAIRE");
+                ProduitEntity produit = new ProduitEntity(nom, prix);
+                result.add(produit);
             }
 
-        } catch (SQLException var37) {
-            Logger.getLogger("DAO").log(Level.SEVERE, (String)null, var37);
-            throw new SQLException(var37.getMessage());
+        } catch (SQLException error) {
+            Logger.getLogger("DAO").log(Level.SEVERE, (String)null, error);
+            throw new SQLException(error.getMessage());
         }
 
         return result;
