@@ -11,6 +11,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.sql.DataSource;
 
 /**
@@ -32,7 +36,7 @@ public class DAO {
 
     /**
      * @return Liste des catégories
-     * @throws SQLException renvoyées par JDBC
+     * @throws SQLException
      */
     public HashMap<Integer, Categorie> allCategories() throws SQLException {
 
@@ -51,12 +55,46 @@ public class DAO {
                 Categorie c = new Categorie(lib, desc);
                 result.put(code, c);
             }
+
+        } catch (SQLException var37) {
+            Logger.getLogger("DAO").log(Level.SEVERE, (String)null, var37);
+            throw new SQLException(var37.getMessage());
         }
+
         return result;
     }
-    
-    public static void main(String[] args) {
-        DAO dao = new DAO(DataSourceFactory.getDataSource());
+
+    /**
+     *
+     * @param enterpriseName Nom de l'entreprise
+     * @return Liste des articles vendus par l'entreprise
+     * @throws SQLException
+     */
+    public List<String> itemSold(String enterpriseName) throws SQLException {
+        List<String> result = new LinkedList<>();
+        String sql = "SELECT DISTINCT REFERENCE, NOM " +
+                "FROM APP.PRODUIT, APP.LIGNE, APP.COMMANDE " +
+                "WHERE APP.PRODUIT.REFERENCE=APP.LIGNE.PRODUIT " +
+                "AND APP.LIGNE.COMMANDE=APP.COMMANDE.NUMERO " +
+                "AND APP.COMMANDE.CLIENT=?";
+
+        try (Connection connection = myDataSource.getConnection(); // Ouvrir une connexion
+             PreparedStatement stmt = connection.prepareStatement(sql); // On crée un statement pour exécuter une requête
+        ) {
+            stmt.setString(1, enterpriseName);
+            ResultSet rs = stmt.executeQuery();
+
+            while(rs.next()) {
+                String nom = rs.getString("NOM");
+                result.add(nom);
+            }
+
+        } catch (SQLException var37) {
+            Logger.getLogger("DAO").log(Level.SEVERE, (String)null, var37);
+            throw new SQLException(var37.getMessage());
+        }
+
+        return result;
     }
 
 }
