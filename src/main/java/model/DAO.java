@@ -97,6 +97,34 @@ public class DAO {
 
         return result;
     }
+    
+    
+        public String getPassword(String Client) throws SQLException {
+            
+        String result = "";
+        String sql = "SELECT CODE FROM APP.CLIENT WHERE APP.CLIENT.CONTACT = ?";
+
+        try (Connection connection = myDataSource.getConnection(); // Ouvrir une connexion
+             PreparedStatement stmt = connection.prepareStatement(sql); // On crée un statement pour exécuter une requête
+        ) {
+            stmt.setString(1, Client);
+            ResultSet rs = stmt.executeQuery();
+            
+            while (rs.next()) {
+                result = rs.getString("CODE");
+            }
+
+        } catch (SQLException error) {
+            Logger.getLogger("DAO").log(Level.SEVERE, (String)null, error);
+            throw new SQLException(error.getMessage());
+        }
+
+        return result;
+    }
+        
+    public static void main(String[] args) throws SQLException {
+        DAO dao = new DAO(DataSourceFactory.getDataSource());
+    }
 
 }
 
