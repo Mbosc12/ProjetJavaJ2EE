@@ -100,7 +100,7 @@ public class DAO {
      */
     public String getPassword(String Client) throws SQLException {
 
-        String result = "";
+        String result = "null";
         String sql = "SELECT CODE FROM APP.CLIENT WHERE APP.CLIENT.CONTACT = ?";
 
         try (Connection connection = myDataSource.getConnection(); // Ouvrir une connexion
