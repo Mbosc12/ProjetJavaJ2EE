@@ -30,6 +30,17 @@
             });
         }
 
+        // Fonction pour afficher les catégories en appuyant sur le bouton correspondant
+        function afficherCategories() {
+            var x = document.getElementById("categorieTemplate");
+            if (x.style.display === "none") {
+                x.style.display = "block";
+                ShowCategories();
+            } else {
+                x.style.display = "none";
+            }
+        }
+
         // Fonction qui traite les erreurs de la requête
         function showError(xhr, status, message) {
             alert(JSON.parse(xhr.responseText).message);
@@ -49,15 +60,15 @@
     <hr>
 </div>
 <form >
-    <input type="button" value="Afficher les catégories" onsubmit="event.preventDefault(); ShowCategories();">
+    <input type="button" value="Afficher les catégories" onclick="afficherCategories()">
 
      <!-- La zone où les résultats vont s'afficher -->
     <div id="categorie"></div>
 
     <!-- Le template qui sert à formatter la liste des codes -->
-    <script id="categorieTemplate" type="text/template">
+    <script id="categorieTemplate" type="text/template" style="display:none;">
         <TABLE>
-            <tr><th>Code</th><th>Taux</th><th>Action</th></tr>
+            <tr><th>Categorie</th><th>Description</th></tr>
             {{! Pour chaque enregistrement }}
             {{#records}}
             {{! Une ligne dans la table }}
