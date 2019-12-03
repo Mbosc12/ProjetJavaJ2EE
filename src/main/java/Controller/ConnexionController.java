@@ -32,25 +32,26 @@ public class ConnexionController extends HttpServlet {
                                             break;
                             }
                     }
-                } catch (SQLException e) {
                     
-                }
-
-		// Est-ce que l'utilisateur est connecté ?
+                // Est-ce que l'utilisateur est connecté ?
 		// On cherche l'attribut userName dans la session
 		String userName = findUserInSession(request);
 		String jspView;
                 
 		if (null == userName) { // L'utilisateur n'est pas connecté
 			// On choisit la page de login
-			jspView = "login.jsp";
+			jspView = "Login.jsp";
 
 		} else { // L'utilisateur est connecté
 			// On choisit la page d'affichage
-			jspView = "accueil.jsp";
+			jspView = "affiche.jsp";
 		}
 		// On va vers la page choisie
 		request.getRequestDispatcher(jspView).forward(request, response);
+
+                } catch (SQLException e) {
+                    
+                }
 
 	}
 
@@ -99,15 +100,13 @@ public class ConnexionController extends HttpServlet {
 		String passwordParam = request.getParameter("passwordParam");
 
                 DAO dao = new DAO(DataSourceFactory.getDataSource());
-                
 		String password = dao.getPassword(loginParam);
-                String username = dao.getPassword(loginParam);
 
 		if (((password.equals(passwordParam)))) {
 			// On a trouvé la combinaison login / password
 			// On stocke l'information dans la session
 			HttpSession session = request.getSession(true); // démarre la session
-			session.setAttribute("userName", username);
+			session.setAttribute("userName", loginParam);
 		} else { // On positionne un message d'erreur pour l'afficher dans la JSP
 			request.setAttribute("errorMessage", "Login/Password incorrect");
 		}

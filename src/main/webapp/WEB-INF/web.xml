@@ -5,16 +5,8 @@
         <servlet-class>Controller.ConnexionController</servlet-class>
         <!-- Les identifiants pour se connecter -->
         <init-param>
-            <param-name>login</param-name>
-            <param-value>untel</param-value>
-        </init-param>
-        <init-param>
-            <param-name>password</param-name>
-            <param-value>ABCD</param-value>
-        </init-param>
-        <init-param>
-            <param-name>userName</param-name>
-            <param-value>Mr. Super-User</param-value>
+            <param-name>admin</param-name>
+            <param-value>admin</param-value>
         </init-param>
     </servlet>
     
