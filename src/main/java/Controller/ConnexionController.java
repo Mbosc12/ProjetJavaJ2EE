@@ -101,8 +101,14 @@ public class ConnexionController extends HttpServlet {
 
                 DAO dao = new DAO(DataSourceFactory.getDataSource());
 		String password = dao.getPassword(loginParam);
-
-		if (((password.equals(passwordParam)))) {
+                
+                String loginpredf = getInitParameter("login");
+		String passwordpredf = getInitParameter("password");
+                
+                
+                System.out.println("login : " + loginpredf + " password : "  + passwordpredf);
+                
+		if ((password.equals(passwordParam)) || (loginpredf.equals(loginParam) && passwordpredf.equals(passwordParam))) {
 			// On a trouvé la combinaison login / password
 			// On stocke l'information dans la session
 			HttpSession session = request.getSession(true); // démarre la session

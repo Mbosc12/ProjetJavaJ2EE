@@ -5,7 +5,11 @@
         <servlet-class>Controller.ConnexionController</servlet-class>
         <!-- Les identifiants pour se connecter -->
         <init-param>
-            <param-name>admin</param-name>
+            <param-name>login</param-name>
+            <param-value>admin</param-value>
+        </init-param>
+        <init-param>
+            <param-name>password</param-name>
             <param-value>admin</param-value>
         </init-param>
     </servlet>

@@ -32,7 +32,7 @@
 
         // Fonction pour afficher les catégories en appuyant sur le bouton correspondant
         function afficherCategories() {
-            var x = document.getElementById("categorieTemplate");            
+            var x = document.getElementById("categorieTemplate");
             if (x.style.display === "none") {
                 x.style.display = "block";
                 ShowCategories();
@@ -54,7 +54,7 @@
 <div>
     <h1>Cette page utilise les servlets suivantes :</h1>
     <ul>
-        <li><a href="ShowCategories" target="_blank">ShowCategories : liste les catégories</a></li>
+        <li><a href="ShowCategories" target="_blank">ShowCatergories : liste les catégories</a></li>
     </ul>
     La page utilise également le <a href="https://mustache.github.io/" target="_blank">moteur de template Mustache</a> pour formatter le résultat.<br>
     <hr>
@@ -66,7 +66,7 @@
     <div id="categorie"></div>
 
     <!-- Le template qui sert à formatter la liste des codes -->
-    <script id="categorieTemplate" type="text/template">
+    <script id="categorieTemplate" type="text/template" style="display:none;">
         <TABLE>
             <tr><th>Categorie</th><th>Description</th></tr>
             {{! Pour chaque enregistrement }}
