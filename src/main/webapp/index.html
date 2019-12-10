@@ -44,11 +44,11 @@
                                 // On combine le template avec le résultat de la requête
                                 var processedTemplate = Mustache.to_html(template, result);
                                 // On affiche la liste des options dans le select
-                                $('.products').html(processedTemplate);
+                                $('.product').html(processedTemplate);
                             }
                 });
             }
-            window.onload = ShowCategories, ShowProducts;   
+            window.onload = function() { ShowProducts(); ShowCategories(); }; 
     // Fonction qui traite les erreurs de la requête
             function showError(xhr, status, message) {
                 alert(JSON.parse(xhr.responseText).message);
@@ -65,11 +65,11 @@
             
                      
             $(function () {
-                $(".test").slice(0, 4).show();
+                $(".itemprod").slice(0, 4).show();
                 $("#loadMore").on('click', function (e) {
                     e.preventDefault();
-                    $("div:hidden").slice(0, 4).slideDown();
-                    if ($(".test:hidden").length == 0) {
+                    $("ul li:hidden").slice(0, 4).slideDown();
+                    if ($(".product:hidden").length == 0) {
                         $("#load").fadeOut('slow');
                     }
                     $('section').animate({
@@ -108,7 +108,7 @@
                     <div class="right">
                         <img class="icon" src="images/icon/magnifier.png" alt="logo" width="40">
                         <img class="icon" src="images/icon/shopping-cart.png" alt="logo" width="40">
-                        <a href="Login.jsp" ><img class="icon" src="images/icon/man-user.png" alt="logo" width="40"></a>
+                        <a href="Login.jsp" ><img class="icon login" src="images/icon/man-user.png" alt="logo" width="40"></a>
                         
                     </div>
                 </div>
@@ -117,36 +117,9 @@
             </nav>
         </header>
         
-<!--        
+     
         <section>
-            <div class="test">Content</div>          
-            <div class="test">Content</div>            
-            <div class="test">Content</div>           
-            <div class="test">Content</div>          
-            <div class="test">Content</div>
-            <div class="test">Content</div>
-            <div class="test">Content</div>
-            <div class="test">Content</div>          
-            <div class="test">Content</div>            
-            <div class="test">Content</div>           
-            <div class="test">Content</div>          
-            <div class="test">Content</div>
-            <div class="test">Content</div>
-            <div class="test">Content</div>
-            <div class="test">Content</div>          
-            <div class="test">Content</div>            
-            <div class="test">Content</div>           
-            <div class="test">Content</div>          
-            <div class="test">Content</div>
-            <div class="test">Content</div>
-            <div class="test">Content</div>
-            <div class="test">Content</div>          
-            <div class="test">Content</div>            
-            <div class="test">Content</div>           
-            <div class="test">Content</div>          
-            <div class="test">Content</div>
-            <div class="test">Content</div>
-            <div class="test">Content</div>
+            <ul class="product"></ul>          
             
 
 
@@ -155,20 +128,18 @@
             <p class="totop"> 
                 <a class="atop" href="#top">Back to top</a> 
             </p>
-        </section> -->
+        </section>
 
         
-<div class="products">
-    <p> prods </p>
-</div>
         
         
             <script id="productsTemplate" type="text/template">
-                <ul>
                 {{#prod}}
-                <li>{{nom}}</li>
+                <li class="itemprod">
+                <img src="images/index.png" alt="balek" height="280" width="280">
+                <h3>{{nom}}</h3>
+                <button class="addcart" height="10px">Ajouter au panier</button></li>
                 {{/prod}}
-                </ul>
             </script>
             
             <script id="categorieTemplate" type="text/template">
