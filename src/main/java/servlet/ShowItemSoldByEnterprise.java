@@ -24,7 +24,7 @@ import model.DataSourceFactory;
  *
  * @author lauriecoumes
  */
-@WebServlet(name = "ShowItemSoldByEnterprise", urlPatterns = {"/ShowItemSoldByEnterprise"})
+@WebServlet(name = "ShowItemSold", urlPatterns = {"/ShowItemSold"})
 public class ShowItemSoldByEnterprise extends HttpServlet {
 
     /**
