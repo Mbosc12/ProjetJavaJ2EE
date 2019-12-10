@@ -33,10 +33,15 @@ nav {
 
 .right {
     margin-right: 90px;
+    display: flex;
 }
 
 .icon {
-    margin: 15px 10px 0 10px;
+    margin: auto 15px;
+}
+
+.login {
+    margin-top: 3px;
 }
 
 .categories {
@@ -45,7 +50,7 @@ nav {
 }
 
 .categories ul {
-    width: 80%;
+    width: 70%;
     list-style-type: none;
     padding: 0;
     margin: 0 auto;
@@ -62,7 +67,7 @@ nav {
 }
 
 .categories ul li:not(:first-child){
-    padding: 0 25px;
+    padding: 0 20px;
 }
 
 .categories ul li:hover{

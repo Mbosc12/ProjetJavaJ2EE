@@ -39,10 +39,10 @@
     <session-config>
         <!-- Un temps volontairement court : 1 minute -->
         <session-timeout>
-            1
+            300
         </session-timeout>
     </session-config>
     <welcome-file-list>
-        <welcome-file>ConnexionController</welcome-file>
+        <welcome-file>index.html</welcome-file>
     </welcome-file-list>
 </web-app>

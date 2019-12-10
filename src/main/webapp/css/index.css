@@ -1,12 +1,14 @@
 section {
     background-color: #f6f6f6;
-    width: 400px;
+    width: 1400px;
     margin: 20px auto;
     font: normal 13px/100% sans-serif;
     color: #444;
 }
-.test {
-    display:none;
+.product {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
     padding: 10px;
     border-width: 0 1px 1px 0;
     border-style: solid;
@@ -15,6 +17,7 @@ section {
     margin-bottom: 5px;
     background-color: #f1f1f1;
 }
+
 .totop {
     position: fixed;
     bottom: 10px;
@@ -50,4 +53,15 @@ a:hover {
 #loadMore:hover {
     background-color: #fff;
     color: #33739E;
+}
+
+.itemprod {
+    display: none;
+    flex-direction: column;
+    margin: 30px 0;
+}
+
+.itemprod h3 {
+    font-size: 1.4em;
+    text-align: center;
 }
