@@ -13,7 +13,6 @@ import java.sql.Statement;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.sql.DataSource;
@@ -33,6 +32,7 @@ public class DAO {
 
     /**
      * @return Liste des catégories
+     * @throws SQLException
      */
     public List<CategorieEntity> allCategories() throws SQLException {
 
@@ -59,6 +59,11 @@ public class DAO {
         return result;
     }
 
+    /**
+     * 
+     * @return Liste des produits
+     * @throws SQLException 
+     */
     public List<ProduitEntity> allProducts() throws SQLException {
 
         List<ProduitEntity> result = new LinkedList<>();
@@ -85,6 +90,12 @@ public class DAO {
         return result;
     }
 
+    /**
+     * 
+     * @param enterpriseName Nom de l'entreprise
+     * @return Liste des produits vendus par une entreprise
+     * @throws SQLException 
+     */
     public List<ProduitEntity> itemSold(String enterpriseName) throws SQLException {
         List<ProduitEntity> result = new LinkedList<>();
         String sql = "SELECT DISTINCT REFERENCE, PRIX_UNITAIRE, NOM "
@@ -144,6 +155,12 @@ public class DAO {
         return result;
     }
 
+    /**
+     * 
+     * @param nom Nom du client
+     * @return Entité client avec toutes ses informations
+     * @throws SQLException 
+     */
     public ClientEntity getPersonalData(String nom) throws SQLException {
         
         ClientEntity client = null;
@@ -180,7 +197,52 @@ public class DAO {
         return client;
     }
 
-    public void editPersonalData() throws SQLException {
+    /**
+     * 
+     * @param code Code du client
+     * @param societe Societe du client
+     * @param contact Nom du client
+     * @param fonction Fonction du client
+     * @param adresse Adresse du client
+     * @param ville Ville du client
+     * @param region Region du client
+     * @param code_postal Code postal du client
+     * @param pays Pays du client
+     * @param telephone Telephone du client
+     * @param fax Fax du client
+     * @throws SQLException 
+     */
+    public void editPersonalData(String code, String societe, String contact,
+            String fonction, String adresse, String ville, String region,
+            String code_postal, String pays, String telephone, String fax) 
+            throws SQLException {
+        
+        String sql = "UPDATE APP.CLIENT SET SOCIETE = ?, CONTACT = ?,"
+                + "FONCTION = ?, ADRESSE = ?, VILLE = ?, REGION = ?,"
+                + "CODE_POSTAL = ?, PAYS = ?, TELEPHONE = ?, FAX = ? "
+                + "WHERE CODE = ?";
+        
+        try (Connection connection = myDataSource.getConnection(); // Ouvrir une connexion
+                PreparedStatement stmt = connection.prepareStatement(sql) // On crée un statement pour exécuter une requête
+                ) {
+            stmt.setString(1, societe);
+            stmt.setString(2, contact);
+            stmt.setString(3, fonction);
+            stmt.setString(4, adresse);
+            stmt.setString(5, ville);
+            stmt.setString(6, region);
+            stmt.setString(7, code_postal);
+            stmt.setString(8, pays);
+            stmt.setString(9, telephone);
+            stmt.setString(10, fax);
+            stmt.setString(11, code);
+            
+            stmt.executeQuery();
+
+        } catch (SQLException error) {
+            Logger.getLogger("DAO").log(Level.SEVERE, null, error);
+            throw new SQLException(error.getMessage());
+        }
 
     }
 
@@ -226,6 +288,19 @@ public class DAO {
         panier.put(article, newQuantite);
     }
 
+    /**
+     * 
+     * @param client Client passant la commande
+     * @param destinataire Societe du client
+     * @param adresse_livraison Adresse de livraison du client
+     * @param ville_livraison Ville de livraison du client
+     * @param region_livraison Region de livraison du client
+     * @param code_postal_livrais Code postale de livraison du client
+     * @param pays_livraison Pays de livraison du client
+     * @param produitID Produits à ajouter à la table LIGNE
+     * @param quantite Quantite des articles du panier
+     * @throws SQLException 
+     */
     public void confirmCart(String client, String destinataire,
             String adresse_livraison, String ville_livraison,
             String region_livraison, String code_postal_livrais,
