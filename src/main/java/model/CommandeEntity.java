@@ -11,7 +11,7 @@ package model;
  */
 public class CommandeEntity {
     
-    String numero;
+    int numero;
     String client;
     String saise_le;
     String envoye_le;
@@ -24,7 +24,7 @@ public class CommandeEntity {
     String pays_livraison;
     String remise;
     
-    public CommandeEntity(String numero, String client, String destinataire,
+    public CommandeEntity(int numero, String client, String destinataire,
             String adresse_livraison, String ville_livraison, 
             String region_livraison, String code_postal_livrais,
             String pays_livraison) {
@@ -39,7 +39,7 @@ public class CommandeEntity {
         this.pays_livraison = pays_livraison;
     }
     
-    public String getNumero() {
+    public int getNumero() {
         return numero;
     }
     
