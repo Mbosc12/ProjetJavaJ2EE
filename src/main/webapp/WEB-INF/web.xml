@@ -13,7 +13,10 @@
             <param-value>admin</param-value>
         </init-param>
     </servlet>
-    
+    <servlet>
+        <servlet-name>ShowProducts</servlet-name>
+        <servlet-class>servlet.ShowProducts</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ConnexionController</servlet-name>
         <url-pattern>/ConnexionController</url-pattern>
@@ -28,15 +31,17 @@
         <url-pattern>/protected/*</url-pattern>
         <dispatcher>REQUEST</dispatcher>
     </filter-mapping>
-    
     <!-- Contrôle le temps au bout duquel une session inactive est détruite automatiquement -->
+    <servlet-mapping>
+        <servlet-name>ShowProducts</servlet-name>
+        <url-pattern>/ShowProducts</url-pattern>
+    </servlet-mapping>
     <session-config>
         <!-- Un temps volontairement court : 1 minute -->
         <session-timeout>
             1
         </session-timeout>
     </session-config>
-    
     <welcome-file-list>
         <welcome-file>ConnexionController</welcome-file>
     </welcome-file-list>

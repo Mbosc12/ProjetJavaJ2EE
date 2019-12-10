@@ -57,12 +57,32 @@ public class DAO {
 
         return result;
     }
+    
+    public List<ProduitEntity> allProducts() throws SQLException {
 
-    /**
-     *
-     * @param enterpriseName Nom de l'entreprise
-     * @return Liste des articles vendus par l'entreprise
-     */
+        List<ProduitEntity> result = new LinkedList<>();
+
+        String sql = "SELECT NOM, PRIX_UNITAIRE FROM APP.PRODUIT";
+
+        try (Connection connection = myDataSource.getConnection(); // Ouvrir une connexion
+             Statement stmt = connection.createStatement(); // On crée un statement pour exécuter une requête
+             ResultSet rs = stmt.executeQuery(sql) // Un ResultSet pour parcourir les enregistrements du résultat{
+        ) {
+            while (rs.next()) {
+                String nom = rs.getString("NOM");
+                float prix = rs.getFloat("PRIX_UNITAIRE");
+                ProduitEntity product = new ProduitEntity(nom, prix);
+                result.add(product);
+            }
+
+        } catch (SQLException error) {
+            Logger.getLogger("DAO").log(Level.SEVERE, null, error);
+            throw new SQLException(error.getMessage());
+        }
+
+        return result;
+    }
+
     public List<ProduitEntity> itemSold(String enterpriseName) throws SQLException {
         List<ProduitEntity> result = new LinkedList<>();
         String sql = "SELECT DISTINCT PRIX_UNITAIRE, NOM " +
