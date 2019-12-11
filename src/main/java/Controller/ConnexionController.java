@@ -44,7 +44,7 @@ public class ConnexionController extends HttpServlet {
 
 		} else { // L'utilisateur est connecté
 			// On choisit la page d'affichage
-			jspView = "affiche.jsp";
+			jspView = "index.jsp";
 		}
 		// On va vers la page choisie
 		request.getRequestDispatcher(jspView).forward(request, response);
@@ -130,6 +130,6 @@ public class ConnexionController extends HttpServlet {
 		HttpSession session = request.getSession(false);
 		return (session == null) ? null : (String) session.getAttribute("userName");
 	}
-
+        
 }
 

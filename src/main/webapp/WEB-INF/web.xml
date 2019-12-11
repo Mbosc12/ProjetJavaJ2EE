@@ -43,6 +43,6 @@
         </session-timeout>
     </session-config>
     <welcome-file-list>
-        <welcome-file>index.html</welcome-file>
+        <welcome-file>ConnexionController</welcome-file>
     </welcome-file-list>
 </web-app>

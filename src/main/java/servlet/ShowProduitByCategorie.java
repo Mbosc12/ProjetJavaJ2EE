@@ -24,8 +24,8 @@ import model.DataSourceFactory;
  *
  * @author lauriecoumes
  */
-@WebServlet(name = "ShowItemSold", urlPatterns = {"/ShowItemSold"})
-public class ShowItemSoldByEnterprise extends HttpServlet {
+@WebServlet(name = "ShowProduitByCategorie", urlPatterns = {"/ShowProduitByCategorie"})
+public class ShowProduitByCategorie extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -39,12 +39,12 @@ public class ShowItemSoldByEnterprise extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
-        String enterpriseName = request.getParameter("enterpriseName");
+        String libelle = request.getParameter("categorie");
         DAO dao = new DAO(DataSourceFactory.getDataSource());
 
         Properties resultat = new Properties();
         try {
-            resultat.put("records", dao.itemSold(enterpriseName));
+            resultat.put("records", dao.ProductByCategorie(libelle));
         } catch (SQLException ex) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             resultat.put("records", Collections.EMPTY_LIST);

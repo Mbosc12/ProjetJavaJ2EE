@@ -8,7 +8,7 @@
         <!-- On charge le moteur de template mustache https://mustache.github.io/ -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/0.8.1/mustache.min.js"></script>
         <script>
-            $(document).ready(// ExÃ©cutÃ© Ã  la fin du chargement de la page
+            $(document).ready(// Exécuté à la fin du chargement de la page
 
                     );
             
@@ -18,11 +18,11 @@
                     url: "ShowCategories",
                     dataType: "json",
                     error: showError,
-                    success: // La fonction qui traite les rÃ©sultats
+                    success: // La fonction qui traite les résultats
                             function (result) {
                                 // Le code source du template est dans la page
                                 var template = $('#categorieTemplate').html();
-                                // On combine le template avec le rÃ©sultat de la requÃªte
+                                // On combine le template avec le résultat de la requête
                                 var processedTemplate = Mustache.to_html(template, result);
                                 // On affiche la liste des options dans le select
                                 $('.categories').html(processedTemplate);
@@ -31,19 +31,17 @@
             }
 
 
-
-
             function ShowProducts() {
                 // On fait un appel AJAX pour chercher les codes
                 $.ajax({
                     url: "ShowProducts",
                     dataType: "json",
                     error: showError,
-                    success: // La fonction qui traite les rÃ©sultats
+                    success: // La fonction qui traite les résultats
                             function (result) {
                                 // Le code source du template est dans la page
                                 var template = $('#productsTemplate').html();
-                                // On combine le template avec le rÃ©sultat de la requÃªte
+                                // On combine le template avec le résultat de la requête
                                 var processedTemplate = Mustache.to_html(template, result);
                                 // On affiche la liste des options dans le select
                                 $('.product').html(processedTemplate);
@@ -51,7 +49,7 @@
                 });
             }
             window.onload = function() { ShowProducts(); ShowCategories(); }; 
-    // Fonction qui traite les erreurs de la requÃªte
+    // Fonction qui traite les erreurs de la requête
             function showError(xhr, status, message) {
                 alert(JSON.parse(xhr.responseText).message);
             }
@@ -103,14 +101,14 @@
     <body>
         <header>
             <nav>
-                <div class="navbar" onclick="alert('test')">
+                <div class="navbar">
                     <div class="left">
                         <img src="images/logo.png" alt="logo" width="380">
                     </div>
                     <div class="right">
                         <img class="icon" src="images/icon/magnifier.png" alt="logo" width="40">
                         <img class="icon" src="images/icon/shopping-cart.png" alt="logo" width="40">
-                        <a href="Login.jsp" ><img class="icon login" src="images/icon/man-user.png" alt="logo" width="40"></a>
+                        <h3 style="margin-top: 22px; margin-left: 10px;"> ${userName} </h3>
                         
                     </div>
                 </div>
@@ -147,7 +145,7 @@
             <script id="categorieTemplate" type="text/template">
                 <ul>
                 {{#records}}
-                <li onclick="alert('{{libelle}}')">{{libelle}}</li>
+                <li>{{libelle}}</li>
                 {{/records}}
                 </ul>
             </script>

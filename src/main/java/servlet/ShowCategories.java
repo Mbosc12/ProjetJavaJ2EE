@@ -19,7 +19,7 @@ import com.google.gson.*;
 
 @WebServlet(name = "ShowCategories", urlPatterns = {"/ShowCategories"})
 public class ShowCategories extends HttpServlet {
-
+    
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
 

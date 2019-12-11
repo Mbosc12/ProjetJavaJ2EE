@@ -61,9 +61,9 @@ public class DAO {
     }
 
     /**
-     * 
+     *
      * @return Liste des produits
-     * @throws SQLException 
+     * @throws SQLException
      */
     public List<ProduitEntity> allProducts() throws SQLException {
 
@@ -81,6 +81,31 @@ public class DAO {
                 double prix = rs.getFloat("PRIX_UNITAIRE");
                 ProduitEntity product = new ProduitEntity(reference, nom, prix);
                 result.add(product);
+            }
+
+        } catch (SQLException error) {
+            Logger.getLogger("DAO").log(Level.SEVERE, null, error);
+            throw new SQLException(error.getMessage());
+        }
+
+        return result;
+    }
+
+    public List<ProduitEntity> ProductByCategorie(String cat) throws SQLException {
+        List<ProduitEntity> result = new LinkedList<>();
+        String sql = "SELECT * FROM APP.PRODUIT, APP.CATEGORIE WHERE APP.CATEGORIE.CODE = APP.PRODUIT.CATEGORIE AND APP.CATEGORIE.LIBELLE = ?";
+
+        try (Connection connection = myDataSource.getConnection(); // Ouvrir une connexion
+                PreparedStatement stmt = connection.prepareStatement(sql)) { // On crée un statement pour exécuter une requête
+            stmt.setString(1, cat);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    int reference = rs.getInt("REFERENCE");
+                    String nom = rs.getString("NOM");
+                    double prix = rs.getFloat("PRIX_UNITAIRE");
+                    ProduitEntity product = new ProduitEntity(reference, nom, prix);
+                    result.add(product);
+                }
             }
 
         } catch (SQLException error) {
@@ -121,22 +146,22 @@ public class DAO {
     }
 
     /**
-     * 
+     *
      * @param nom Nom du client
      * @return Entité client avec toutes ses informations
-     * @throws SQLException 
+     * @throws SQLException
      */
     public ClientEntity getPersonalData(String nom) throws SQLException {
-        
+
         ClientEntity client = null;
         String sql = "SELECT * FROM APP.CLIENT WHERE CONTACT = ?";
-        
+
         try (Connection connection = myDataSource.getConnection(); // Ouvrir une connexion
                 PreparedStatement stmt = connection.prepareStatement(sql) // On crée un statement pour exécuter une requête
                 ) {
             stmt.setString(1, nom);
             ResultSet rs = stmt.executeQuery();
-            
+
             while (rs.next()) {
                 String code = rs.getString("CODE");
                 String societe = rs.getString("SOCIETE");
@@ -150,7 +175,7 @@ public class DAO {
                 String telephone = rs.getString("TELEPHONE");
                 String fax = rs.getString("FAX");
                 client = new ClientEntity(code, societe, contact,
-                        fonction, adresse, ville, region, code_postal, pays, 
+                        fonction, adresse, ville, region, code_postal, pays,
                         telephone, fax);
             }
 
@@ -163,7 +188,7 @@ public class DAO {
     }
 
     /**
-     * 
+     *
      * @param code Code du client
      * @param societe Societe du client
      * @param contact Nom du client
@@ -175,18 +200,18 @@ public class DAO {
      * @param pays Pays du client
      * @param telephone Telephone du client
      * @param fax Fax du client
-     * @throws SQLException 
+     * @throws SQLException
      */
     public void editPersonalData(String code, String societe, String contact,
             String fonction, String adresse, String ville, String region,
-            String code_postal, String pays, String telephone, String fax) 
+            String code_postal, String pays, String telephone, String fax)
             throws SQLException {
-        
+
         String sql = "UPDATE APP.CLIENT SET SOCIETE = ?, CONTACT = ?,"
                 + "FONCTION = ?, ADRESSE = ?, VILLE = ?, REGION = ?,"
                 + "CODE_POSTAL = ?, PAYS = ?, TELEPHONE = ?, FAX = ? "
                 + "WHERE CODE = ?";
-        
+
         try (Connection connection = myDataSource.getConnection(); // Ouvrir une connexion
                 PreparedStatement stmt = connection.prepareStatement(sql) // On crée un statement pour exécuter une requête
                 ) {
@@ -201,7 +226,7 @@ public class DAO {
             stmt.setString(9, telephone);
             stmt.setString(10, fax);
             stmt.setString(11, code);
-            
+
             stmt.executeQuery();
 
         } catch (SQLException error) {
@@ -223,12 +248,10 @@ public class DAO {
 
     }
 
-    
-    public void addToCart(HashMap<Integer, Integer> panier, ProduitEntity p, int qte) {        
+    public void addToCart(HashMap<Integer, Integer> panier, ProduitEntity p, int qte) {
         panier.put(p.getReference(), qte);
     }
 
-    
     public void deleteFromCart(HashMap<Integer, Integer> panier, ProduitEntity p) {
         panier.remove(p.getReference());
     }
@@ -245,7 +268,7 @@ public class DAO {
     }
 
     /**
-     * 
+     *
      * @param client Client passant la commande
      * @param destinataire Societe du client
      * @param adresse_livraison Adresse de livraison du client
@@ -255,7 +278,7 @@ public class DAO {
      * @param pays_livraison Pays de livraison du client
      * @param produitID Produits à ajouter à la table LIGNE
      * @param quantite Quantite des articles du panier
-     * @throws SQLException 
+     * @throws SQLException
      */
     public void confirmCart(String client, String destinataire,
             String adresse_livraison, String ville_livraison,
@@ -290,7 +313,6 @@ public class DAO {
             int numeroCommande = generatedKeys.getInt(1);
             Logger.getLogger("DAO").log(Level.INFO,
                     "Nouvelle clé générée pour INVOICE : {0}", numeroCommande);
-            
 
             try (PreparedStatement addLigne = connection.prepareStatement(ajoutLigne)) {
                 for (int produit = 0; produit < produitID.length; produit++) {
