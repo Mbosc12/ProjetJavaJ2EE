@@ -13,6 +13,7 @@ import java.sql.Statement;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.sql.DataSource;
@@ -258,23 +259,14 @@ public class DAO {
 
     }
 
-    /**
-     *
-     * @param panier Panier du client
-     * @param p ProduitEntity de l'article à ajouter
-     * @param quantite Quantité de l'article à ajouter
-     */
-    public void addToCart(HashMap<ProduitEntity, Integer> panier, ProduitEntity p, int quantite) {
-        panier.put(p, quantite);
+    
+    public void addToCart(HashMap<Integer, Integer> panier, ProduitEntity p, int qte) {        
+        panier.put(p.getReference(), qte);
     }
 
-    /**
-     *
-     * @param panier Panier du client
-     * @param p ProduitEntity de l'article à supprimer
-     */
-    public void deleteFromCart(HashMap<ProduitEntity, Integer> panier, ProduitEntity p) {
-        panier.remove(p);
+    
+    public void deleteFromCart(HashMap<Integer, Integer> panier, ProduitEntity p) {
+        panier.remove(p.getReference());
     }
 
     /**
@@ -331,13 +323,14 @@ public class DAO {
             // Génération du numéro de commande
             ResultSet generatedKeys = stmt.getGeneratedKeys();
             generatedKeys.next();
-            int numeroCommande = generatedKeys.getInt("NUMERO");
+            int numeroCommande = generatedKeys.getInt(1);
             Logger.getLogger("DAO").log(Level.INFO,
                     "Nouvelle clé générée pour INVOICE : {0}", numeroCommande);
+            
 
             try (PreparedStatement addLigne = connection.prepareStatement(ajoutLigne)) {
                 for (int produit = 0; produit < produitID.length; produit++) {
-                    addLigne.setInt(1, produit);
+                    addLigne.setInt(1, numeroCommande);
                     addLigne.setInt(2, produitID[produit]);
                     addLigne.setInt(3, quantite[produit]);
 
@@ -358,20 +351,21 @@ public class DAO {
 
         // HashMap<Integer, Categorie> result = dao.allCategories();
         // List<ProduitEntity> result = dao.itemSold("VINET");
-        HashMap<ProduitEntity, Integer> panier = new HashMap<>();
+        HashMap<Integer, Integer> panier = new HashMap<>();
 
         ProduitEntity chang = new ProduitEntity(2, "Chang", 95.00);
-        dao.addToCart(panier, chang, 10);
-
+        dao.addToCart(panier, chang, 3);
+        
         ProduitEntity ikura = new ProduitEntity(10, "Ikura", 155.00);
         dao.addToCart(panier, ikura, 5);
-
-        System.out.print(panier.values());
-
-        /*List<String> result = dao.confirmCart(panier, "Maria Anders");
-        for (String s : result) {
-            System.out.println(s);
-        }*/
+        System.out.print(panier);
+        
+        int[] productID = new int[]{2, 10};
+        int[] quantite = new int[]{3, 5};
+        
+        dao.confirmCart("ALFKI", "Alfreds Futterkiste",
+                "Obere Str. 57", "Berlin", null, "12209", "Allemange", 
+                productID, quantite);
  /*
         System.out.println(panier);
         dao.deleteFromCart(panier, chang);
