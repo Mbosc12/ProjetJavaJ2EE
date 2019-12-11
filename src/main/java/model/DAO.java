@@ -92,42 +92,6 @@ public class DAO {
     }
 
     /**
-     * 
-     * @param enterpriseName Nom de l'entreprise
-     * @return Liste des produits vendus par une entreprise
-     * @throws SQLException 
-     */
-    public List<ProduitEntity> itemSold(String enterpriseName) throws SQLException {
-        List<ProduitEntity> result = new LinkedList<>();
-        String sql = "SELECT DISTINCT REFERENCE, PRIX_UNITAIRE, NOM "
-                + "FROM APP.PRODUIT, APP.LIGNE, APP.COMMANDE "
-                + "WHERE APP.PRODUIT.REFERENCE=APP.LIGNE.PRODUIT "
-                + "AND APP.LIGNE.COMMANDE=APP.COMMANDE.NUMERO "
-                + "AND APP.COMMANDE.CLIENT=?";
-
-        try (Connection connection = myDataSource.getConnection(); // Ouvrir une connexion
-                PreparedStatement stmt = connection.prepareStatement(sql) // On crée un statement pour exécuter une requête
-                ) {
-            stmt.setString(1, enterpriseName);
-            ResultSet rs = stmt.executeQuery();
-
-            while (rs.next()) {
-                int reference = rs.getInt("REFERENCE");
-                String nom = rs.getString("NOM");
-                double prix = rs.getFloat("PRIX_UNITAIRE");
-                ProduitEntity produit = new ProduitEntity(reference, nom, prix);
-                result.add(produit);
-            }
-
-        } catch (SQLException error) {
-            Logger.getLogger("DAO").log(Level.SEVERE, null, error);
-            throw new SQLException(error.getMessage());
-        }
-
-        return result;
-    }
-
-    /**
      *
      * @param Client Nom du visiteur qui souhaite se connecter
      * @return Mot de passe du client
@@ -349,8 +313,8 @@ public class DAO {
     public static void main(String[] args) throws SQLException {
         DAO dao = new DAO(DataSourceFactory.getDataSource());
 
-        // HashMap<Integer, Categorie> result = dao.allCategories();
-        // List<ProduitEntity> result = dao.itemSold("VINET");
+        /* HashMap<Integer, Categorie> result = dao.allCategories();
+        List<ProduitEntity> result = dao.itemSold("VINET");
         HashMap<Integer, Integer> panier = new HashMap<>();
 
         ProduitEntity chang = new ProduitEntity(2, "Chang", 95.00);
@@ -366,7 +330,7 @@ public class DAO {
         dao.confirmCart("ALFKI", "Alfreds Futterkiste",
                 "Obere Str. 57", "Berlin", null, "12209", "Allemange", 
                 productID, quantite);
- /*
+        
         System.out.println(panier);
         dao.deleteFromCart(panier, chang);
         System.out.println(panier);
