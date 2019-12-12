@@ -48,7 +48,8 @@ public class DAO {
             while (rs.next()) {
                 String lib = rs.getString("LIBELLE");
                 String desc = rs.getString("DESCRIPTION");
-                CategorieEntity categorie = new CategorieEntity(lib, desc);
+                int code = rs.getInt("CODE");
+                CategorieEntity categorie = new CategorieEntity(lib, desc, code);
                 result.add(categorie);
             }
 
@@ -79,7 +80,9 @@ public class DAO {
                 int reference = rs.getInt("REFERENCE");
                 String nom = rs.getString("NOM");
                 double prix = rs.getFloat("PRIX_UNITAIRE");
-                ProduitEntity product = new ProduitEntity(reference, nom, prix);
+                int stock = rs.getInt("Unites_en_stock");
+                
+                ProduitEntity product = new ProduitEntity(reference, nom, prix, stock);
                 result.add(product);
             }
 
@@ -91,19 +94,21 @@ public class DAO {
         return result;
     }
 
-    public List<ProduitEntity> ProductByCategorie(String cat) throws SQLException {
+    public List<ProduitEntity> ProductByCategorie(String code) throws SQLException {
         List<ProduitEntity> result = new LinkedList<>();
-        String sql = "SELECT * FROM APP.PRODUIT, APP.CATEGORIE WHERE APP.CATEGORIE.CODE = APP.PRODUIT.CATEGORIE AND APP.CATEGORIE.LIBELLE = ?";
+        String sql = "SELECT * FROM APP.PRODUIT WHERE CATEGORIE = ?";
 
         try (Connection connection = myDataSource.getConnection(); // Ouvrir une connexion
                 PreparedStatement stmt = connection.prepareStatement(sql)) { // On crée un statement pour exécuter une requête
-            stmt.setString(1, cat);
+            stmt.setInt(1, Integer.parseInt(code));
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     int reference = rs.getInt("REFERENCE");
                     String nom = rs.getString("NOM");
                     double prix = rs.getFloat("PRIX_UNITAIRE");
-                    ProduitEntity product = new ProduitEntity(reference, nom, prix);
+                    int stock = rs.getInt("Unites_en_stock");
+                
+                    ProduitEntity product = new ProduitEntity(reference, nom, prix, stock);
                     result.add(product);
                 }
             }

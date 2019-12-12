@@ -39,16 +39,16 @@ public class ShowProduitByCategorie extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
-        String libelle = request.getParameter("categorie");
+        String categorie = request.getParameter("categorie");
         DAO dao = new DAO(DataSourceFactory.getDataSource());
 
         Properties resultat = new Properties();
         try {
-            resultat.put("records", dao.ProductByCategorie(libelle));
+            resultat.put("prod", dao.ProductByCategorie(categorie));
         } catch (SQLException ex) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            resultat.put("records", Collections.EMPTY_LIST);
-            resultat.put("message", ex.getMessage());
+            resultat.put("prod", Collections.EMPTY_LIST);
+            resultat.put("prodmsg", ex.getMessage());
         }
         
         try (PrintWriter out = response.getWriter()) {

@@ -9,10 +9,12 @@ public class CategorieEntity {
     
     String libelle;
     String description;
+    int code;
     
-    public CategorieEntity(String libelle, String description) {
+    public CategorieEntity(String libelle, String description, int code) {
         this.libelle = libelle;
         this.description = description;
+        this.code = code;
     }
     
     public String getLibelle() {
@@ -23,4 +25,7 @@ public class CategorieEntity {
         return description;
     }
     
+    public int getCode() {
+        return code;
+    }
 }
