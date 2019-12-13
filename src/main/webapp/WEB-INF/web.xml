@@ -17,6 +17,18 @@
         <servlet-name>ShowProducts</servlet-name>
         <servlet-class>servlet.ShowProducts</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ShowCommande</servlet-name>
+        <servlet-class>servlet.ShowCommande</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ShowClientInfomartions</servlet-name>
+        <servlet-class>servlet.ShowClientInfomartions</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ShowClientInformations</servlet-name>
+        <servlet-class>servlet.ShowClientInformations</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ConnexionController</servlet-name>
         <url-pattern>/ConnexionController</url-pattern>
@@ -35,6 +47,18 @@
     <servlet-mapping>
         <servlet-name>ShowProducts</servlet-name>
         <url-pattern>/ShowProducts</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ShowCommande</servlet-name>
+        <url-pattern>/ShowCommande</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ShowClientInfomartions</servlet-name>
+        <url-pattern>/ShowClientInfomartions</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ShowClientInformations</servlet-name>
+        <url-pattern>/ShowClientInformations</url-pattern>
     </servlet-mapping>
     <session-config>
         <!-- Un temps volontairement court : 1 minute -->

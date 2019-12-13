@@ -1,3 +1,8 @@
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+ 
+<% String userName = request.getParameter("userName"); %>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -8,10 +13,11 @@
         <!-- On charge le moteur de template mustache https://mustache.github.io/ -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/0.8.1/mustache.min.js"></script>
         <script>
-            $(document).ready(// Exécuté à la fin du chargement de la page
+            $(document).ready(// ExÃ©cutÃ© Ã  la fin du chargement de la page
                     function () {
                         ShowALLProducts();
                         ShowCategories();
+                        isLogin(this);
                     }
             );
 
@@ -21,11 +27,11 @@
                     url: "ShowCategories",
                     dataType: "json",
                     error: showError,
-                    success: // La fonction qui traite les résultats
+                    success: // La fonction qui traite les rÃ©sultats
                             function (result) {
                                 // Le code source du template est dans la page
                                 var template = $('#categorieTemplate').html();
-                                // On combine le template avec le résultat de la requête
+                                // On combine le template avec le rÃ©sultat de la requÃªte
                                 var processedTemplate = Mustache.to_html(template, result);
                                 // On affiche la liste des options dans le select
                                 $('.categories').html(processedTemplate);
@@ -40,11 +46,11 @@
                     url: "ShowProducts",
                     dataType: "json",
                     error: showError,
-                    success: // La fonction qui traite les résultats
+                    success: // La fonction qui traite les rÃ©sultats
                             function (result) {
                                 // Le code source du template est dans la page
                                 var template = $('#productsTemplate').html();
-                                // On combine le template avec le résultat de la requête
+                                // On combine le template avec le rÃ©sultat de la requÃªte
                                 var processedTemplate = Mustache.to_html(template, result);
                                 // On affiche la liste des options dans le select
                                 $('.product').html(processedTemplate);
@@ -58,19 +64,39 @@
                     data: {"categorie": code},
                     dataType: "json",
                     error: showError,
-                    success: // La fonction qui traite les résultats
+                    success: // La fonction qui traite les rÃ©sultats
                             function (result) {
                                 // Le code source du template est dans la page
                                 var template = $('#productsTemplate').html();
-                                // On combine le template avec le résultat de la requête
+                                // On combine le template avec le rÃ©sultat de la requÃªte
                                 var processedTemplate = Mustache.to_html(template, result);
                                 // On affiche la liste des options dans le select
                                 $('.product').html(processedTemplate);
                             }
                 });
             }
+            
+            
+            
+            function isLogin(usr) {
+                $.ajax({
+                    url: "ConnexionController",
+                    data: {"action": $(usr).val()},
+                    dataType: "text",
+                    error: showError,
+                    success:
+                            function (result) {
+                                    var user = document.getElementById("user").innerHTML;
+                                    if (user === ""){
+                                        $("#log").html('<a href="Login.jsp"><button>Se connecter</button></a>');
+                                    } else {
+                                        $("#log").html('<a href="protected/commandes.jsp"><button>Mon Compte</button></a>');
+                                    }
+                            }
+                });
+            }
 
-            // Fonction qui traite les erreurs de la requête
+            // Fonction qui traite les erreurs de la requÃªte
             function showError(xhr, status, message) {
                 alert(JSON.parse(xhr.responseText).message);
             }
@@ -80,6 +106,9 @@
         <link rel="stylesheet" type="text/css" href="css/include.css">
         <link rel="stylesheet" type="text/css" href="css/index.css">
     </head>
+    
+    <div id="user" style="display: none;">${userName}</div>
+    
     <body>
         <header>
             <nav>
@@ -90,38 +119,37 @@
                     <div class="right">
                         <img class="icon" src="images/icon/magnifier.png" alt="logo" width="40">
                         <img class="icon" src="images/icon/shopping-cart.png" alt="logo" width="40">
-                        <a href="Login.jsp" ><img class="icon login" src="images/icon/man-user.png" alt="logo" width="40"></a>
+                        <div id="log"></div>
                     </div>
                 </div>
                 <div class="navbar categories">
                 </div>
             </nav>
         </header>
+        <section>
+            <ul class="product"></ul>          
+        </section>
 
-            <section>
-                <ul class="product"></ul>          
-            </section>
+        <script id="productsTemplate" type="text/template">
+            {{#prod}}
+            <li>
+            <img src="images/index.png" alt="balek" height="280" width="280">
+            <h3>{{nom}}</h3>
+            <div class="catinfo" style="display: flex; justify-content: space-between;">
+            <p class="price"> Prix : {{prix}}</p>
+            <p class="stock"> DisponibilitÃ©s:{{stock}}</p>
+            </div>    
+            <button class="addcart" height="10px">Ajouter au panier</button>
+            </li>
+            {{/prod}}
+        </script>
 
-            <script id="productsTemplate" type="text/template">
-                {{#prod}}
-                <li>
-                <img src="images/index.png" alt="balek" height="280" width="280">
-                <h3>{{nom}}</h3>
-                <div class="catinfo" style="display: flex; justify-content: space-between;">
-                    <p class="price"> Prix : {{prix}}</p>
-                    <p class="stock"> Disponibilités:{{stock}}</p>
-                </div>    
-                <button class="addcart" height="10px">Ajouter au panier</button>
-                </li>
-                {{/prod}}
-            </script>
-
-            <script id="categorieTemplate" type="text/template">
-                <ul>
-                {{#records}}
-                <li onclick="ShowProdList('{{code}}')">{{libelle}}</li>
-        {{/records}}
-    </ul>
-            </script>
+        <script id="categorieTemplate" type="text/template">
+            <ul>
+            {{#records}}
+            <li onclick="ShowProdList('{{code}}')">{{libelle}}</li>
+            {{/records}}
+            </ul>
+        </script>
     </body>
 </html>
