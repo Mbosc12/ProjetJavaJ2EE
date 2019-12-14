@@ -40,9 +40,9 @@ public class DAO {
 
         String sql = "SELECT * FROM APP.CATEGORIE";
 
-        try ( Connection connection = myDataSource.getConnection(); // Ouvrir une connexion
-                  Statement stmt = connection.createStatement(); // On crée un statement pour exécuter une requête
-                  ResultSet rs = stmt.executeQuery(sql) // Un ResultSet pour parcourir les enregistrements du résultat{
+        try (Connection connection = myDataSource.getConnection(); // Ouvrir une connexion
+                Statement stmt = connection.createStatement(); // On crée un statement pour exécuter une requête
+                ResultSet rs = stmt.executeQuery(sql) // Un ResultSet pour parcourir les enregistrements du résultat{
                 ) {
             while (rs.next()) {
                 String lib = rs.getString("LIBELLE");
@@ -71,9 +71,9 @@ public class DAO {
 
         String sql = "SELECT * FROM APP.PRODUIT";
 
-        try ( Connection connection = myDataSource.getConnection(); // Ouvrir une connexion
-                  Statement stmt = connection.createStatement(); // On crée un statement pour exécuter une requête
-                  ResultSet rs = stmt.executeQuery(sql) // Un ResultSet pour parcourir les enregistrements du résultat{
+        try (Connection connection = myDataSource.getConnection(); // Ouvrir une connexion
+                Statement stmt = connection.createStatement(); // On crée un statement pour exécuter une requête
+                ResultSet rs = stmt.executeQuery(sql) // Un ResultSet pour parcourir les enregistrements du résultat{
                 ) {
             while (rs.next()) {
                 int reference = rs.getInt("REFERENCE");
@@ -97,10 +97,10 @@ public class DAO {
         List<ProduitEntity> result = new LinkedList<>();
         String sql = "SELECT * FROM APP.PRODUIT WHERE CATEGORIE = ?";
 
-        try ( Connection connection = myDataSource.getConnection(); // Ouvrir une connexion
-                  PreparedStatement stmt = connection.prepareStatement(sql)) { // On crée un statement pour exécuter une requête
+        try (Connection connection = myDataSource.getConnection(); // Ouvrir une connexion
+                PreparedStatement stmt = connection.prepareStatement(sql)) { // On crée un statement pour exécuter une requête
             stmt.setInt(1, Integer.parseInt(code));
-            try ( ResultSet rs = stmt.executeQuery()) {
+            try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     int reference = rs.getInt("REFERENCE");
                     String nom = rs.getString("NOM");
@@ -131,8 +131,8 @@ public class DAO {
         String result = "null";
         String sql = "SELECT CODE FROM APP.CLIENT WHERE APP.CLIENT.CONTACT = ?";
 
-        try ( Connection connection = myDataSource.getConnection(); // Ouvrir une connexion
-                  PreparedStatement stmt = connection.prepareStatement(sql); // On crée un statement pour exécuter une requête
+        try (Connection connection = myDataSource.getConnection(); // Ouvrir une connexion
+                PreparedStatement stmt = connection.prepareStatement(sql); // On crée un statement pour exécuter une requête
                 ) {
             stmt.setString(1, Client);
             ResultSet rs = stmt.executeQuery();
@@ -157,11 +157,11 @@ public class DAO {
      */
     public String getCodeByName(String nom) throws SQLException {
         String result = "";
-        
+
         String sql = "SELECT CODE FROM APP.CLIENT WHERE CONTACT = ?";
 
-        try ( Connection connection = myDataSource.getConnection(); // Ouvrir une connexion
-                  PreparedStatement stmt = connection.prepareStatement(sql) // On crée un statement pour exécuter une requête
+        try (Connection connection = myDataSource.getConnection(); // Ouvrir une connexion
+                PreparedStatement stmt = connection.prepareStatement(sql) // On crée un statement pour exécuter une requête
                 ) {
             stmt.setString(1, nom);
             ResultSet rs = stmt.executeQuery();
@@ -183,8 +183,8 @@ public class DAO {
         List<ClientEntity> client = new LinkedList();
         String sql = "SELECT * FROM APP.CLIENT WHERE CODE = ?";
 
-        try ( Connection connection = myDataSource.getConnection(); // Ouvrir une connexion
-                  PreparedStatement stmt = connection.prepareStatement(sql) // On crée un statement pour exécuter une requête
+        try (Connection connection = myDataSource.getConnection(); // Ouvrir une connexion
+                PreparedStatement stmt = connection.prepareStatement(sql) // On crée un statement pour exécuter une requête
                 ) {
             stmt.setString(1, code);
             ResultSet rs = stmt.executeQuery();
@@ -213,10 +213,10 @@ public class DAO {
 
         return client;
     }
-    
+
     public void editClientPersonalData(String code, String societe,
-            String contact, String fonction, String adresse, String ville, 
-            String region, String code_postal, String pays, String telephone, 
+            String contact, String fonction, String adresse, String ville,
+            String region, String code_postal, String pays, String telephone,
             String fax)
             throws SQLException {
 
@@ -224,10 +224,9 @@ public class DAO {
                 + "FONCTION = ?, ADRESSE = ?, VILLE = ?, REGION = ?,"
                 + "CODE_POSTAL = ?, PAYS = ?, TELEPHONE = ?, FAX = ?"
                 + "WHERE CODE = ?";
-        
 
-        try ( Connection connection = myDataSource.getConnection(); // Ouvrir une connexion
-                  PreparedStatement stmt = connection.prepareStatement(sql) // On crée un statement pour exécuter une requête
+        try (Connection connection = myDataSource.getConnection(); // Ouvrir une connexion
+                PreparedStatement stmt = connection.prepareStatement(sql) // On crée un statement pour exécuter une requête
                 ) {
             stmt.setString(1, societe);
             stmt.setString(2, contact);
@@ -242,12 +241,12 @@ public class DAO {
             stmt.setString(11, code);
 
             stmt.executeUpdate();
-            
+
         } catch (SQLException error) {
             Logger.getLogger("DAO").log(Level.SEVERE, null, error);
             throw new SQLException(error.getMessage());
         }
-    }    
+    }
 
     public void addPurchaseOrders() throws SQLException {
 
@@ -297,15 +296,13 @@ public class DAO {
             String pays_livraison, int[] produitID, int[] quantite)
             throws SQLException {
 
-        List<String> result = new LinkedList<>();
-
         String ajoutCommande = "INSERT INTO APP.COMMANDE (CLIENT, "
                 + "DESTINATAIRE, ADRESSE_LIVRAISON, VILLE_LIVRAISON,"
                 + "REGION_LIVRAISON, CODE_POSTAL_LIVRAIS, PAYS_LIVRAISON)\n"
                 + "VALUES (?, ?, ?, ?, ?, ?, ?)";
         String ajoutLigne = "INSERT INTO APP.LIGNE VALUES (?, ?, ?)";
-        try ( Connection connection = myDataSource.getConnection(); // Ouvrir une connexion
-                  PreparedStatement stmt = connection.prepareStatement(ajoutCommande, Statement.RETURN_GENERATED_KEYS) // On crée un statement pour exécuter une requête
+        try (Connection connection = myDataSource.getConnection(); // Ouvrir une connexion
+                PreparedStatement stmt = connection.prepareStatement(ajoutCommande, Statement.RETURN_GENERATED_KEYS) // On crée un statement pour exécuter une requête
                 ) {
             connection.setAutoCommit(false);
             stmt.setString(1, client);
@@ -325,7 +322,7 @@ public class DAO {
             Logger.getLogger("DAO").log(Level.INFO,
                     "Nouvelle clé générée pour INVOICE : {0}", numeroCommande);
 
-            try ( PreparedStatement addLigne = connection.prepareStatement(ajoutLigne)) {
+            try (PreparedStatement addLigne = connection.prepareStatement(ajoutLigne)) {
                 for (int produit = 0; produit < produitID.length; produit++) {
                     addLigne.setInt(1, numeroCommande);
                     addLigne.setInt(2, produitID[produit]);
@@ -348,8 +345,8 @@ public class DAO {
         String sql = "SELECT * FROM APP.COMMANDE WHERE CLIENT = ?";
         List<CommandeEntity> result = new LinkedList<>();
 
-        try ( Connection connection = myDataSource.getConnection(); // Ouvrir une connexion
-                  PreparedStatement stmt = connection.prepareStatement(sql); // On crée un statement pour exécuter une requête
+        try (Connection connection = myDataSource.getConnection(); // Ouvrir une connexion
+                PreparedStatement stmt = connection.prepareStatement(sql); // On crée un statement pour exécuter une requête
                 ) {
             stmt.setString(1, code);
             ResultSet rs = stmt.executeQuery();
@@ -379,11 +376,27 @@ public class DAO {
         return result;
     }
 
+    public int numberOfCommandes(String client) throws SQLException {
+        String sql = "SELECT COUNT(*) AS NUMBER_OF_COMMANDE FROM APP.COMMANDE "
+                + "WHERE CLIENT=?";
+        int result = 0;
+
+        try (Connection connection = myDataSource.getConnection();
+                PreparedStatement stmt = connection.prepareStatement(sql);) {
+            stmt.setString(1, client);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                result = rs.getInt("NUMBER_OF_COMMANDE");
+            }
+        }
+        return result;
+    }
+
     public static void main(String[] args) throws SQLException {
         DAO dao = new DAO(DataSourceFactory.getDataSource());
         //Afficher toutes les catégories
         // HashMap<Integer, Categorie> result = dao.allCategories();
-        
+
         // Ajouter + supprimer du panier
         /*HashMap<ProduitEntity, Integer> panier = new HashMap<>();
 
@@ -395,23 +408,22 @@ public class DAO {
         System.out.print(panier);
         
         dao.deleteFromCart(panier, chang);
-        System.out.print(panier);
-        
-        int[] productID = new int[]{2, 10};
-        int[] quantite = new int[]{3, 5};
-        
-        dao.confirmCart("ALFKI", "Alfreds Futterkiste",
-                "Obere Str. 57", "Berlin", null, "12209", "Allemange", 
-                productID, quantite);
-        
-        System.out.println(panier);
+        System.out.print(panier);*/
+        int[] productID = new int[]{2, 16, 57};
+        int[] quantite = new int[]{10, 3, 8};
+
+        /*dao.confirmCart("ALFKI", "Alfreds Futterkiste",
+                "Obere Str. 57", "Berlin", null, "12209", "Allemange",
+                productID, quantite);*/
+        System.out.print(dao.numberOfCommandes("ALFKI"));
+
+        /*System.out.println(panier);
         
         System.out.println(panier);
         dao.editQuantityOrdered(panier, "Ikura", 10);
         System.out.println(panier);
         System.out.println(dao.ClientCommande("ALFKI"));
         System.out.println(dao.getPersonalData("ALFKI"));*/
-        
     }
 
 }
