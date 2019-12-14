@@ -13,7 +13,6 @@ import java.sql.Statement;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.sql.DataSource;
@@ -219,41 +218,18 @@ public class DAO {
      *
      * @param code Code du client
      * @param societe Societe du client
-     * @param contact Nom du client
-     * @param fonction Fonction du client
-     * @param adresse Adresse du client
-     * @param ville Ville du client
-     * @param region Region du client
-     * @param code_postal Code postal du client
-     * @param pays Pays du client
-     * @param telephone Telephone du client
-     * @param fax Fax du client
      * @throws SQLException
      */
-    public void editPersonalData(String code, String societe, String contact,
-            String fonction, String adresse, String ville, String region,
-            String code_postal, String pays, String telephone, String fax)
+    public void editClientSociete(String code, String societe)
             throws SQLException {
 
-        String sql = "UPDATE APP.CLIENT SET SOCIETE = ?, CONTACT = ?,"
-                + "FONCTION = ?, ADRESSE = ?, VILLE = ?, REGION = ?,"
-                + "CODE_POSTAL = ?, PAYS = ?, TELEPHONE = ?, FAX = ? "
-                + "WHERE CODE = ?";
+        String sql = "UPDATE APP.CLIENT SET SOCIETE = ? WHERE CODE = ?";
 
         try ( Connection connection = myDataSource.getConnection(); // Ouvrir une connexion
                   PreparedStatement stmt = connection.prepareStatement(sql) // On crée un statement pour exécuter une requête
                 ) {
             stmt.setString(1, societe);
-            stmt.setString(2, contact);
-            stmt.setString(3, fonction);
-            stmt.setString(4, adresse);
-            stmt.setString(5, ville);
-            stmt.setString(6, region);
-            stmt.setString(7, code_postal);
-            stmt.setString(8, pays);
-            stmt.setString(9, telephone);
-            stmt.setString(10, fax);
-            stmt.setString(11, code);
+            stmt.setString(2, code);
 
             stmt.executeQuery();
 
@@ -261,8 +237,234 @@ public class DAO {
             Logger.getLogger("DAO").log(Level.SEVERE, null, error);
             throw new SQLException(error.getMessage());
         }
-
     }
+    
+    /**
+     * 
+     * @param code Code du client
+     * @param contact Nom et prénom du client
+     * @throws SQLException 
+     */
+    public void editClientContact(String code, String contact)
+            throws SQLException {
+
+        String sql = "UPDATE APP.CLIENT SET CONTACT = ? WHERE CODE = ?";
+
+        try ( Connection connection = myDataSource.getConnection(); // Ouvrir une connexion
+                  PreparedStatement stmt = connection.prepareStatement(sql) // On crée un statement pour exécuter une requête
+                ) {
+            stmt.setString(1, contact);
+            stmt.setString(2, code);
+
+            stmt.executeQuery();
+
+        } catch (SQLException error) {
+            Logger.getLogger("DAO").log(Level.SEVERE, null, error);
+            throw new SQLException(error.getMessage());
+        }
+    }
+    
+    /**
+     * 
+     * @param code Code du client
+     * @param fonction Fonction du client
+     * @throws SQLException 
+     */
+    public void editClientFonction(String code, String fonction)
+            throws SQLException {
+
+        String sql = "UPDATE APP.CLIENT SET FONCTION = ? WHERE CODE = ?";
+
+        try ( Connection connection = myDataSource.getConnection(); // Ouvrir une connexion
+                  PreparedStatement stmt = connection.prepareStatement(sql) // On crée un statement pour exécuter une requête
+                ) {
+            stmt.setString(1, fonction);
+            stmt.setString(2, code);
+
+            stmt.executeQuery();
+
+        } catch (SQLException error) {
+            Logger.getLogger("DAO").log(Level.SEVERE, null, error);
+            throw new SQLException(error.getMessage());
+        }
+    }
+    
+    /**
+     * 
+     * @param code Code du client
+     * @param adresse Adresse du client
+     * @throws SQLException 
+     */
+    public void editClientAdresse(String code, String adresse)
+            throws SQLException {
+
+        String sql = "UPDATE APP.CLIENT SET ADRESSE = ? WHERE CODE = ?";
+
+        try ( Connection connection = myDataSource.getConnection(); // Ouvrir une connexion
+                  PreparedStatement stmt = connection.prepareStatement(sql) // On crée un statement pour exécuter une requête
+                ) {
+            stmt.setString(1, adresse);
+            stmt.setString(2, code);
+
+            stmt.executeQuery();
+
+        } catch (SQLException error) {
+            Logger.getLogger("DAO").log(Level.SEVERE, null, error);
+            throw new SQLException(error.getMessage());
+        }
+    }
+    
+    /**
+     * 
+     * @param code Code du client
+     * @param ville Ville du client
+     * @throws SQLException 
+     */
+    public void editClientVille(String code, String ville)
+            throws SQLException {
+
+        String sql = "UPDATE APP.CLIENT SET VILLE = ? WHERE CODE = ?";
+
+        try ( Connection connection = myDataSource.getConnection(); // Ouvrir une connexion
+                  PreparedStatement stmt = connection.prepareStatement(sql) // On crée un statement pour exécuter une requête
+                ) {
+            stmt.setString(1, ville);
+            stmt.setString(2, code);
+
+            stmt.executeQuery();
+
+        } catch (SQLException error) {
+            Logger.getLogger("DAO").log(Level.SEVERE, null, error);
+            throw new SQLException(error.getMessage());
+        }
+    }
+    
+    /**
+     * 
+     * @param code Code du client
+     * @param region Region du client
+     * @throws SQLException 
+     */
+    public void editClientRegion(String code, String region)
+            throws SQLException {
+
+        String sql = "UPDATE APP.CLIENT SET REGION = ? WHERE CODE = ?";
+
+        try ( Connection connection = myDataSource.getConnection(); // Ouvrir une connexion
+                  PreparedStatement stmt = connection.prepareStatement(sql) // On crée un statement pour exécuter une requête
+                ) {
+            stmt.setString(1, region);
+            stmt.setString(2, code);
+
+            stmt.executeQuery();
+
+        } catch (SQLException error) {
+            Logger.getLogger("DAO").log(Level.SEVERE, null, error);
+            throw new SQLException(error.getMessage());
+        }
+    }
+    
+    /**
+     * 
+     * @param code Code du client
+     * @param code_postal Code postal du client
+     * @throws SQLException 
+     */
+    public void editClientCodePostal(String code, String code_postal)
+            throws SQLException {
+
+        String sql = "UPDATE APP.CLIENT SET CODE_POSTAL = ? WHERE CODE = ?";
+
+        try ( Connection connection = myDataSource.getConnection(); // Ouvrir une connexion
+                  PreparedStatement stmt = connection.prepareStatement(sql) // On crée un statement pour exécuter une requête
+                ) {
+            stmt.setString(1, code_postal);
+            stmt.setString(2, code);
+
+            stmt.executeQuery();
+
+        } catch (SQLException error) {
+            Logger.getLogger("DAO").log(Level.SEVERE, null, error);
+            throw new SQLException(error.getMessage());
+        }
+    }
+    
+    /**
+     * 
+     * @param code Code du client
+     * @param pays Pays du client
+     * @throws SQLException 
+     */
+    public void editClientPays(String code, String pays)
+            throws SQLException {
+
+        String sql = "UPDATE APP.CLIENT SET PAYS = ? WHERE CODE = ?";
+
+        try ( Connection connection = myDataSource.getConnection(); // Ouvrir une connexion
+                  PreparedStatement stmt = connection.prepareStatement(sql) // On crée un statement pour exécuter une requête
+                ) {
+            stmt.setString(1, pays);
+            stmt.setString(2, code);
+
+            stmt.executeQuery();
+
+        } catch (SQLException error) {
+            Logger.getLogger("DAO").log(Level.SEVERE, null, error);
+            throw new SQLException(error.getMessage());
+        }
+    }
+    
+    /**
+     * 
+     * @param code Code du client
+     * @param telephone Telephone du client
+     * @throws SQLException 
+     */
+    public void editClientTelephone(String code, String telephone)
+            throws SQLException {
+
+        String sql = "UPDATE APP.CLIENT SET TELEPHONE = ? WHERE CODE = ?";
+
+        try ( Connection connection = myDataSource.getConnection(); // Ouvrir une connexion
+                  PreparedStatement stmt = connection.prepareStatement(sql) // On crée un statement pour exécuter une requête
+                ) {
+            stmt.setString(1, telephone);
+            stmt.setString(2, code);
+
+            stmt.executeQuery();
+
+        } catch (SQLException error) {
+            Logger.getLogger("DAO").log(Level.SEVERE, null, error);
+            throw new SQLException(error.getMessage());
+        }
+    }
+    
+    /**
+     * 
+     * @param code Code du client
+     * @param fax Fax du client
+     * @throws SQLException 
+     */
+    public void editClientFax(String code, String fax)
+            throws SQLException {
+
+        String sql = "UPDATE APP.CLIENT SET FAX = ? WHERE CODE = ?";
+
+        try ( Connection connection = myDataSource.getConnection(); // Ouvrir une connexion
+                  PreparedStatement stmt = connection.prepareStatement(sql) // On crée un statement pour exécuter une requête
+                ) {
+            stmt.setString(1, fax);
+            stmt.setString(2, code);
+
+            stmt.executeQuery();
+
+        } catch (SQLException error) {
+            Logger.getLogger("DAO").log(Level.SEVERE, null, error);
+            throw new SQLException(error.getMessage());
+        }
+    }
+    
+    
 
     public void addPurchaseOrders() throws SQLException {
 
@@ -276,12 +478,10 @@ public class DAO {
 
     }
 
-    public void addToCart(HashMap<Integer, Integer> panier, ProduitEntity p, int qte) {
-        panier.put(p.getReference(), qte);
+    public void addToCart(ProduitEntity p, int qte) {
     }
 
-    public void deleteFromCart(HashMap<Integer, Integer> panier, ProduitEntity p) {
-        panier.remove(p.getReference());
+    public void deleteFromCart(ProduitEntity p) {
     }
 
     /**
@@ -398,16 +598,20 @@ public class DAO {
 
     public static void main(String[] args) throws SQLException {
         DAO dao = new DAO(DataSourceFactory.getDataSource());
+        //Afficher toutes les catégories
+        // HashMap<Integer, Categorie> result = dao.allCategories();
+        
+        // Ajouter + supprimer du panier
+        /*HashMap<ProduitEntity, Integer> panier = new HashMap<>();
 
-        /* HashMap<Integer, Categorie> result = dao.allCategories();
-        List<ProduitEntity> result = dao.itemSold("VINET");
-        HashMap<Integer, Integer> panier = new HashMap<>();
-
-        ProduitEntity chang = new ProduitEntity(2, "Chang", 95.00);
+        ProduitEntity chang = new ProduitEntity(2, "Chang", 95.00, 17);
         dao.addToCart(panier, chang, 3);
         
-        ProduitEntity ikura = new ProduitEntity(10, "Ikura", 155.00);
+        ProduitEntity ikura = new ProduitEntity(10, "Ikura", 155.00, 31);
         dao.addToCart(panier, ikura, 5);
+        System.out.print(panier);
+        
+        dao.deleteFromCart(panier, chang);
         System.out.print(panier);
         
         int[] productID = new int[]{2, 10};
@@ -418,12 +622,12 @@ public class DAO {
                 productID, quantite);
         
         System.out.println(panier);
-        dao.deleteFromCart(panier, chang);
+        
         System.out.println(panier);
         dao.editQuantityOrdered(panier, "Ikura", 10);
         System.out.println(panier);
         System.out.println(dao.ClientCommande("ALFKI"));
-        */System.out.println(dao.getPersonalData("ALFKI"));
+        System.out.println(dao.getPersonalData("ALFKI"));*/
         
     }
 
