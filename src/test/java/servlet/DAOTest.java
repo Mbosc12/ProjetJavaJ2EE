@@ -2,7 +2,7 @@
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
- */
+ 
 package servlet;
 
 import java.io.File;
@@ -23,7 +23,7 @@ import static org.junit.Assert.*;
 /**
  *
  * @author lauriecoumes
- */
+ 
 public class DAOTest {
 
     private DAO dao; // L'objet à tester
@@ -67,7 +67,7 @@ public class DAOTest {
      * Teste la méthode toutesLesCategories
      *
      * @throws SQLException
-     */
+     
     @Test
     public void canConfirmCart() throws Exception {
         // On calcule combien le client a de factures
@@ -99,3 +99,4 @@ public class DAOTest {
     }
 
 }
+*/
