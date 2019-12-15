@@ -460,6 +460,43 @@ public class DAO {
         }
         return result;
     }
+    
+    /**
+     * 
+     * Afficher les chiffres d'affaires de chaque catégorie
+     * 
+     * @param saisie_le A partir de quelle date afficher le chiffre d'affaires
+     * @param envoyee_le Jusqu'à quelle date afficher le chiffre d'affaires
+     * @return Dictionnaire dont la clé est le code de la catégorie et la valeur
+     *         est le chiffre d'affaires correspondant à la catégorie
+     * @throws SQLException 
+     */
+    public HashMap<Integer, Double> showCaForAllCategories(String saisie_le, 
+            String envoyee_le) throws SQLException {
+        
+        HashMap<Integer, Double> result = new HashMap<>();
+        List<Integer> categories = new LinkedList<>();
+        
+        String sql = "SELECT * FROM CATEGORIE";
+        
+        try ( Connection connection = myDataSource.getConnection();
+                Statement stmt = connection.createStatement();
+                ResultSet rs = stmt.executeQuery(sql)) {
+            while(rs.next()) {
+                int categorie = rs.getInt("CODE");
+                categories.add(categorie);                
+            }
+            
+            for(int i = 0; i<categories.size(); i++) {
+                result.put(categories.get(i), this.showCAByCategorie(categories.get(i), saisie_le, envoyee_le));
+            }
+            
+        } catch (SQLException error) {
+            Logger.getLogger("DAO").log(Level.SEVERE, (String) null, error);
+            throw new SQLException(error.getMessage());
+        }
+        return result;
+    }
 
     /**
      *
@@ -502,6 +539,43 @@ public class DAO {
         }
         return result;
     }
+    
+    /**
+     * 
+     * Afficher les chiffres d'affaires de chaque pays
+     * 
+     * @param saisie_le A partir de quelle date afficher le chiffre d'affaires
+     * @param envoyee_le Jusqu'à quelle date afficher le chiffre d'affaires
+     * @return Dictionnaire dont la clé est le pays et la valeur est le chiffre 
+     *         d'affaires correspondant au pays
+     * @throws SQLException 
+     */
+    public HashMap<String, Double> showCaForAllCountries(String saisie_le, 
+            String envoyee_le) throws SQLException {
+        
+        HashMap<String, Double> result = new HashMap<>();
+        List<String> listePays = new LinkedList<>();
+        
+        String sql = "SELECT DISTINCT PAYS_LIVRAISON FROM APP.COMMANDE";
+        
+        try ( Connection connection = myDataSource.getConnection();
+                Statement stmt = connection.createStatement();
+                ResultSet rs = stmt.executeQuery(sql)) {
+            while(rs.next()) {
+                String pays = rs.getString("PAYS_LIVRAISON");
+                listePays.add(pays);                
+            }
+            
+            for(int i = 0; i<listePays.size(); i++) {
+                result.put(listePays.get(i), this.showCAByCountry(listePays.get(i), saisie_le, envoyee_le));
+            }
+            
+        } catch (SQLException error) {
+            Logger.getLogger("DAO").log(Level.SEVERE, (String) null, error);
+            throw new SQLException(error.getMessage());
+        }
+        return result;
+    } 
 
     /**
      *
