@@ -216,7 +216,7 @@ public class DAO {
 
     /**
      * Edite les données personnels d'un client
-     * 
+     *
      * @param code Code du client
      * @param societe Société du client
      * @param contact Nom et prénom du client
@@ -228,7 +228,7 @@ public class DAO {
      * @param pays Pays du client
      * @param telephone Téléphone du client
      * @param fax Fax du client
-     * @throws SQLException 
+     * @throws SQLException
      */
     public void editClientPersonalData(String code, String societe,
             String contact, String fonction, String adresse, String ville,
@@ -266,9 +266,9 @@ public class DAO {
 
     /**
      *
-     * Ajoute une commande dans la table COMMANDE
-     * et les lignes correspondantes dans la table LIGNE
-     * 
+     * Ajoute une commande dans la table COMMANDE et les lignes correspondantes
+     * dans la table LIGNE
+     *
      * @param client Client passant la commande
      * @param destinataire Societe du client
      * @param adresse_livraison Adresse de livraison du client
@@ -322,12 +322,41 @@ public class DAO {
                 }
             }
 
-            connection.commit();
+            String produit = "SELECT UNITES_COMMANDEES "
+                    + "FROM PRODUIT "
+                    + "WHERE REFERENCE = ?";
+            String updateProduit = "UPDATE PRODUIT "
+                    + "SET UNITES_COMMANDEES = ? "
+                    + "WHERE REFERENCE = ?";
 
+            try (PreparedStatement affProduit = connection.prepareStatement(produit);) {
+                for (int reference = 0; reference < produitID.length; reference++) {
+                    affProduit.setInt(1, produitID[reference]);
+
+                    ResultSet rs = affProduit.executeQuery();
+                    rs.next();
+                    String unites_commandees = rs.getString("UNITES_COMMANDEES");
+
+                    try (PreparedStatement upProduit = connection.prepareStatement(updateProduit);) {
+
+                        upProduit.setInt(1,
+                                Integer.parseInt(unites_commandees)
+                                + quantite[reference]
+                        );
+                        upProduit.setInt(2, produitID[reference]);
+
+                        upProduit.executeUpdate();
+                    }
+                }
+            }
+
+            connection.commit();
+            
         } catch (SQLException error) {
             Logger.getLogger("DAO").log(Level.SEVERE, null, error);
             throw new SQLException(error.getMessage());
         }
+
     }
 
     public List<CommandeEntity> showCommandeByClient(String code) throws SQLException {
@@ -367,12 +396,12 @@ public class DAO {
     }
 
     /**
-     * 
+     *
      * Donne le nombre de commande(s) passée(s) par un client
-     * 
+     *
      * @param client Code du client
      * @return Nombre de commande pour un client
-     * @throws SQLException 
+     * @throws SQLException
      */
     public int numberOfCommandes(String client) throws SQLException {
         String sql = "SELECT COUNT(*) AS NUMBER_OF_COMMANDE FROM APP.COMMANDE "
@@ -391,14 +420,14 @@ public class DAO {
     }
 
     /**
-     * 
+     *
      * Donne le chiffre d'affaires en fonction d'une catégorie de produits
-     * 
+     *
      * @param categorie Catégorie des produits
      * @param saisie_le A partir de quelle date afficher le chiffre d'affaires
      * @param envoyee_le Jusqu'à quelle date afficher le chiffre d'affaires
      * @return Chiffre d'affaires
-     * @throws SQLException 
+     * @throws SQLException
      */
     public double showCAByCategorie(int categorie, String saisie_le,
             String envoyee_le) throws SQLException {
@@ -433,14 +462,14 @@ public class DAO {
     }
 
     /**
-     * 
+     *
      * Donne le chiffre d'affaires en fonction d'un pays
-     * 
+     *
      * @param pays Pays
      * @param saisie_le A partir de quelle date afficher le chiffre d'affaires
      * @param envoyee_le Jusqu'à quelle date afficher le chiffre d'affaires
      * @return Chiffre d'affaires
-     * @throws SQLException 
+     * @throws SQLException
      */
     public double showCAByCountry(String pays, String saisie_le,
             String envoyee_le) throws SQLException {
@@ -474,16 +503,15 @@ public class DAO {
         return result;
     }
 
-    
     /**
-     * 
+     *
      * Donne le chiffres d'affaires en fonction d'un client
-     * 
+     *
      * @param code Code du client
      * @param saisie_le A partir de quelle date afficher le chiffre d'affaires
      * @param envoyee_le Jusqu'à quelle date afficher le chiffre d'affaires
      * @return Chiffre d'affaires
-     * @throws SQLException 
+     * @throws SQLException
      */
     public double showCAByClient(String code, String saisie_le,
             String envoyee_le) throws SQLException {
@@ -518,9 +546,9 @@ public class DAO {
     }
 
     /**
-     * 
+     *
      * Ajouter un produit dans la table PRODUIT
-     * 
+     *
      * @param nom Nom du produit
      * @param fournisseur Numéro du fournisseur du produit
      * @param categorie Numéro de la catégorie du produit
@@ -529,29 +557,27 @@ public class DAO {
      * @param unites_en_stock Unités en stock du produit
      * @param unites_commandees Unités commandées du produit
      * @param niveau_de_reappro Niveau de réapprovisionnement du produit
-     * @throws SQLException 
+     * @throws SQLException
      */
-    public void addProduit(String nom, int fournisseur, int categorie, 
-            String quantite_par_unite, double prix_unitaire,int unites_en_stock, 
-            int unites_commandees, int niveau_de_reappro) 
+    public void addProduit(String nom, int fournisseur, int categorie,
+            String quantite_par_unite, double prix_unitaire, int unites_en_stock,
+            int unites_commandees, int niveau_de_reappro)
             throws SQLException {
         int result;
         String reference_max = "SELECT MAX(REFERENCE) AS REFERENCE_MAX FROM APP.PRODUIT";
 
         try (Connection connection = myDataSource.getConnection();
                 Statement stmt = connection.createStatement();
-                ResultSet rs = stmt.executeQuery(reference_max);
-                ) {
-            
+                ResultSet rs = stmt.executeQuery(reference_max);) {
+
             rs.next();
             result = rs.getInt("REFERENCE_MAX") + 1;
-            
-            
+
         } catch (SQLException error) {
             Logger.getLogger("DAO").log(Level.SEVERE, (String) null, error);
             throw new SQLException(error.getMessage());
         }
-        
+
         int indisponible;
         String insert = "INSERT INTO PRODUIT "
                 + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -568,15 +594,15 @@ public class DAO {
             stmt.setInt(7, unites_en_stock);
             stmt.setInt(8, unites_commandees);
             stmt.setInt(9, niveau_de_reappro);
-            
+
             if (unites_commandees == 0 & niveau_de_reappro == 0) {
                 indisponible = 1;
             } else {
                 indisponible = 0;
             }
-            
+
             stmt.setInt(10, indisponible);
-            
+
             stmt.executeUpdate();
 
         } catch (SQLException error) {
@@ -584,34 +610,33 @@ public class DAO {
             throw new SQLException(error.getMessage());
         }
     }
-    
+
     /**
-     * 
+     *
      * Supprimer un produit de la table PRODUIT
-     * 
+     *
      * @param reference Reference du produit
-     * @throws SQLException 
+     * @throws SQLException
      */
     public void deleteProduit(int reference) throws SQLException {
-        
+
         String sql = "DELETE FROM PRODUIT WHERE REFERENCE = ?";
-        
-        try ( Connection connection = myDataSource.getConnection();
-                PreparedStatement stmt = connection.prepareStatement(sql);
-                ) {
+
+        try (Connection connection = myDataSource.getConnection();
+                PreparedStatement stmt = connection.prepareStatement(sql);) {
             stmt.setInt(1, reference);
-            
+
             stmt.executeUpdate();
         } catch (SQLException error) {
             Logger.getLogger("DAO").log(Level.SEVERE, (String) null, error);
             throw new SQLException(error.getMessage());
         }
     }
-    
+
     /**
-     * 
+     *
      * Editer les informations d'un produit
-     * 
+     *
      * @param reference Reference du produit
      * @param nom Nom du produit
      * @param fournisseur Numéro du fournisseur du produit
@@ -621,13 +646,13 @@ public class DAO {
      * @param unites_en_stock Unités en stock du produit
      * @param unites_commandees Unités commandées du produit
      * @param niveau_de_reappro Niveau de réapprovisionnement du produit
-     * @throws SQLException 
+     * @throws SQLException
      */
-    public void editProduit(int reference, String nom, int fournisseur, 
-            int categorie, String quantite_par_unite, double prix_unitaire, 
-            int unites_en_stock, int unites_commandees, int niveau_de_reappro) 
+    public void editProduit(int reference, String nom, int fournisseur,
+            int categorie, String quantite_par_unite, double prix_unitaire,
+            int unites_en_stock, int unites_commandees, int niveau_de_reappro)
             throws SQLException {
-        
+
         int indisponible;
         String sql = "UPDATE PRODUIT SET NOM = ?, FOURNISSEUR = ?, "
                 + "CATEGORIE = ?, QUANTITE_PAR_UNITE = ?, "
@@ -635,11 +660,10 @@ public class DAO {
                 + "UNITES_COMMANDEES = ?, NIVEAU_DE_REAPPRO = ?, "
                 + "INDISPONIBLE = ? "
                 + "WHERE REFERENCE = ?";
-        
-        try ( Connection connection = myDataSource.getConnection();
-                PreparedStatement stmt = connection.prepareStatement(sql);
-                ) {
-            
+
+        try (Connection connection = myDataSource.getConnection();
+                PreparedStatement stmt = connection.prepareStatement(sql);) {
+
             stmt.setString(1, nom);
             stmt.setInt(2, fournisseur);
             stmt.setInt(3, categorie);
@@ -648,26 +672,26 @@ public class DAO {
             stmt.setInt(6, unites_en_stock);
             stmt.setInt(7, unites_commandees);
             stmt.setInt(8, niveau_de_reappro);
-            
+
             if (unites_commandees == 0 & niveau_de_reappro == 0) {
                 indisponible = 1;
             } else {
                 indisponible = 0;
             }
-            
+
             stmt.setInt(9, indisponible);
-            
+
             stmt.setInt(10, reference);
-            
+
             stmt.executeUpdate();
-            
+
         } catch (SQLException error) {
             Logger.getLogger("DAO").log(Level.SEVERE, (String) null, error);
             throw new SQLException(error.getMessage());
         }
-        
+
     }
-    
+
     /**
      *
      * @param panier Panier du client
@@ -699,8 +723,17 @@ public class DAO {
 
     public static void main(String[] args) throws SQLException {
         DAO dao = new DAO(DataSourceFactory.getDataSource());
-        
-        dao.deleteProduit(78);
+
+        ClientEntity client = new ClientEntity("ALFKI", "Alfreds Futterkiste",
+                "Maria Anders", "Représentant(e)", "Obere Str. 57", "Berlin",
+                null, "12209", "Allemagne", "030_0074321", "030-0076545");
+
+        int[] produitID = new int[]{2};
+        int[] quantite = new int[]{4};
+
+        dao.confirmCart(client.getCode(), client.getSociete(), client.getAdresse(),
+                client.getVille(), client.getRegion(), client.getCodePostal(),
+                client.getPays(), produitID, quantite);
 
     }
 
