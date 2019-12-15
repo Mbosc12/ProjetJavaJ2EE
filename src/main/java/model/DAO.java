@@ -149,38 +149,9 @@ public class DAO {
         return result;
     }
 
-    /**
-     *
-     * @param nom Nom du client
-     * @return Entité client avec toutes ses informations
-     * @throws SQLException
-     */
-    public String getCodeByName(String nom) throws SQLException {
-        String result = "";
+    public ClientEntity showClient(String code) throws SQLException {
 
-        String sql = "SELECT CODE FROM APP.CLIENT WHERE CONTACT = ?";
-
-        try (Connection connection = myDataSource.getConnection(); // Ouvrir une connexion
-                PreparedStatement stmt = connection.prepareStatement(sql) // On crée un statement pour exécuter une requête
-                ) {
-            stmt.setString(1, nom);
-            ResultSet rs = stmt.executeQuery();
-
-            while (rs.next()) {
-                result = rs.getString("CODE");
-            }
-
-        } catch (SQLException error) {
-            Logger.getLogger("DAO").log(Level.SEVERE, null, error);
-            throw new SQLException(error.getMessage());
-        }
-
-        return result;
-    }
-
-    public List<ClientEntity> showClient(String code) throws SQLException {
-
-        List<ClientEntity> client = new LinkedList();
+        ClientEntity client = null;
         String sql = "SELECT * FROM APP.CLIENT WHERE CODE = ?";
 
         try (Connection connection = myDataSource.getConnection(); // Ouvrir une connexion
@@ -201,9 +172,9 @@ public class DAO {
                 String pays = rs.getString("PAYS");
                 String telephone = rs.getString("TELEPHONE");
                 String fax = rs.getString("FAX");
-                client.add(new ClientEntity(nom, societe, contact,
+                client = new ClientEntity(nom, societe, contact,
                         fonction, adresse, ville, region, code_postal, pays,
-                        telephone, fax));
+                        telephone, fax);
             }
 
         } catch (SQLException error) {
