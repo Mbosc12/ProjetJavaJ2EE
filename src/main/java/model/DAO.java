@@ -214,6 +214,22 @@ public class DAO {
         return client;
     }
 
+    /**
+     * Edite les données personnels d'un client
+     * 
+     * @param code Code du client
+     * @param societe Société du client
+     * @param contact Nom et prénom du client
+     * @param fonction Métier du client
+     * @param adresse Adresse du client
+     * @param ville Ville du client
+     * @param region Région du client
+     * @param code_postal Code postal du client
+     * @param pays Pays du client
+     * @param telephone Téléphone du client
+     * @param fax Fax du client
+     * @throws SQLException 
+     */
     public void editClientPersonalData(String code, String societe,
             String contact, String fonction, String adresse, String ville,
             String region, String code_postal, String pays, String telephone,
@@ -250,17 +266,9 @@ public class DAO {
 
     /**
      *
-     * @param panier Panier du client
-     * @param article Article dont il faut changer la quantité
-     * @param newQuantite La nouvelle quantité qui va remplacer la précédente
-     * @throws SQLException
-     */
-    public void editQuantityOrdered(HashMap<String, Integer> panier, String article, int newQuantite) throws SQLException {
-        panier.put(article, newQuantite);
-    }
-
-    /**
-     *
+     * Ajoute une commande dans la table COMMANDE
+     * et les lignes correspondantes dans la table LIGNE
+     * 
      * @param client Client passant la commande
      * @param destinataire Societe du client
      * @param adresse_livraison Adresse de livraison du client
@@ -358,6 +366,14 @@ public class DAO {
         return result;
     }
 
+    /**
+     * 
+     * Donne le nombre de commande(s) passée(s) par un client
+     * 
+     * @param client Code du client
+     * @return Nombre de commande pour un client
+     * @throws SQLException 
+     */
     public int numberOfCommandes(String client) throws SQLException {
         String sql = "SELECT COUNT(*) AS NUMBER_OF_COMMANDE FROM APP.COMMANDE "
                 + "WHERE CLIENT=?";
@@ -373,11 +389,21 @@ public class DAO {
         }
         return result;
     }
-    
-    public double showCAByCategorie(int categorie, String saisie_le, 
+
+    /**
+     * 
+     * Donne le chiffre d'affaires en fonction d'une catégorie de produits
+     * 
+     * @param categorie Catégorie des produits
+     * @param saisie_le A partir de quelle date afficher le chiffre d'affaires
+     * @param envoyee_le Jusqu'à quelle date afficher le chiffre d'affaires
+     * @return Chiffre d'affaires
+     * @throws SQLException 
+     */
+    public double showCAByCategorie(int categorie, String saisie_le,
             String envoyee_le) throws SQLException {
         double result = 0;
-        
+
         String sql = "SELECT PRIX_UNITAIRE*QUANTITE AS CHIFFRE_DAFFAIRES "
                 + "FROM PRODUIT, LIGNE, COMMANDE "
                 + "WHERE PRODUIT.REFERENCE = LIGNE.PRODUIT "
@@ -385,32 +411,41 @@ public class DAO {
                 + "AND PRODUIT.CATEGORIE = ? "
                 + "AND COMMANDE.SAISIE_LE >= ? "
                 + "AND COMMANDE.ENVOYEE_LE <= ?";
-        
-        try ( Connection connection = myDataSource.getConnection();
-                PreparedStatement stmt = connection.prepareStatement(sql);
-                ) {
+
+        try (Connection connection = myDataSource.getConnection();
+                PreparedStatement stmt = connection.prepareStatement(sql);) {
             stmt.setInt(1, categorie);
             stmt.setString(2, saisie_le);
             stmt.setString(3, envoyee_le);
-            
+
             ResultSet rs = stmt.executeQuery();
-            
-            while(rs.next()) {
+
+            while (rs.next()) {
                 double chiffre_daffaires = rs.getInt("CHIFFRE_DAFFAIRES");
                 result += chiffre_daffaires;
             }
-            
+
         } catch (SQLException error) {
             Logger.getLogger("DAO").log(Level.SEVERE, (String) null, error);
             throw new SQLException(error.getMessage());
         }
         return result;
     }
-    
+
+    /**
+     * 
+     * Donne le chiffre d'affaires en fonction d'un pays
+     * 
+     * @param pays Pays
+     * @param saisie_le A partir de quelle date afficher le chiffre d'affaires
+     * @param envoyee_le Jusqu'à quelle date afficher le chiffre d'affaires
+     * @return Chiffre d'affaires
+     * @throws SQLException 
+     */
     public double showCAByCountry(String pays, String saisie_le,
             String envoyee_le) throws SQLException {
         double result = 0;
-        
+
         String sql = "SELECT PRIX_UNITAIRE*QUANTITE AS CHIFFRE_DAFFAIRES "
                 + "FROM LIGNE, COMMANDE, PRODUIT "
                 + "WHERE LIGNE.COMMANDE = COMMANDE.NUMERO "
@@ -418,32 +453,42 @@ public class DAO {
                 + "AND COMMANDE.PAYS_LIVRAISON = ? "
                 + "AND COMMANDE.SAISIE_LE >= ? "
                 + "AND COMMANDE.ENVOYEE_LE <= ?";
-        
-        try ( Connection connection = myDataSource.getConnection();
-                PreparedStatement stmt = connection.prepareStatement(sql);
-                ) {
+
+        try (Connection connection = myDataSource.getConnection();
+                PreparedStatement stmt = connection.prepareStatement(sql);) {
             stmt.setString(1, pays);
             stmt.setString(2, saisie_le);
             stmt.setString(3, envoyee_le);
-        
+
             ResultSet rs = stmt.executeQuery();
-            
-            while(rs.next()) {
+
+            while (rs.next()) {
                 double chiffre_daffaires = rs.getInt("CHIFFRE_DAFFAIRES");
                 result += chiffre_daffaires;
             }
-            
+
         } catch (SQLException error) {
             Logger.getLogger("DAO").log(Level.SEVERE, (String) null, error);
             throw new SQLException(error.getMessage());
         }
         return result;
     }
+
     
+    /**
+     * 
+     * Donne le chiffres d'affaires en fonction d'un client
+     * 
+     * @param code Code du client
+     * @param saisie_le A partir de quelle date afficher le chiffre d'affaires
+     * @param envoyee_le Jusqu'à quelle date afficher le chiffre d'affaires
+     * @return Chiffre d'affaires
+     * @throws SQLException 
+     */
     public double showCAByClient(String code, String saisie_le,
             String envoyee_le) throws SQLException {
         double result = 0;
-        
+
         String sql = "SELECT PRIX_UNITAIRE*QUANTITE AS CHIFFRE_DAFFAIRES "
                 + "FROM LIGNE, COMMANDE, PRODUIT "
                 + "WHERE LIGNE.COMMANDE = COMMANDE.NUMERO "
@@ -451,32 +496,106 @@ public class DAO {
                 + "AND COMMANDE.CLIENT = ? "
                 + "AND COMMANDE.SAISIE_LE >= ? "
                 + "AND COMMANDE.ENVOYEE_LE <= ?";
-        
+
         try (Connection connection = myDataSource.getConnection();
-                PreparedStatement stmt = connection.prepareStatement(sql);
-                ) {
+                PreparedStatement stmt = connection.prepareStatement(sql);) {
             stmt.setString(1, code);
             stmt.setString(2, saisie_le);
             stmt.setString(3, envoyee_le);
-            
+
             ResultSet rs = stmt.executeQuery();
-            
-            while(rs.next()) {
+
+            while (rs.next()) {
                 double chiffre_daffaires = rs.getInt("CHIFFRE_DAFFAIRES");
                 result += chiffre_daffaires;
             }
-            
+
         } catch (SQLException error) {
             Logger.getLogger("DAO").log(Level.SEVERE, (String) null, error);
             throw new SQLException(error.getMessage());
         }
         return result;
     }
-    
-    public void addProduit() {
+
+    /**
+     * 
+     * Ajouter un produit dans la table PRODUIT
+     * 
+     * @param nom Nom du produit
+     * @param fournisseur Numéro du fournisseur du produit
+     * @param categorie Numéro de la catégorie du produit
+     * @param quantite_par_unite Description de la quantité par unité du produit
+     * @param prix_unitaire Prix unitaire du produit
+     * @param unites_en_stock Unités en stock du produit
+     * @param unites_commandees Unités commandées du produit
+     * @param niveau_de_reappro Niveau de réapprovisionnement du produit
+     * @throws SQLException 
+     */
+    public void addProduit(String nom, int fournisseur, int categorie, 
+            String quantite_par_unite, double prix_unitaire, 
+            int unites_en_stock, int unites_commandees, 
+            int niveau_de_reappro) 
+            throws SQLException {
+        int result;
+        String reference_max = "SELECT MAX(REFERENCE) AS REFERENCE_MAX FROM APP.PRODUIT";
+
+        try (Connection connection = myDataSource.getConnection();
+                Statement stmt = connection.createStatement();
+                ResultSet rs = stmt.executeQuery(reference_max);
+                ) {
+            
+            rs.next();
+            result = rs.getInt("REFERENCE_MAX") + 1;
+            
+            
+        } catch (SQLException error) {
+            Logger.getLogger("DAO").log(Level.SEVERE, (String) null, error);
+            throw new SQLException(error.getMessage());
+        }
         
+        int indisponible;
+        String insert = "INSERT INTO PRODUIT "
+                + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        try (Connection connection = myDataSource.getConnection();
+                PreparedStatement stmt = connection.prepareStatement(insert);) {
+            System.out.print("RESULT " + result);
+            stmt.setInt(1, result);
+            stmt.setString(2, nom);
+            stmt.setInt(3, fournisseur);
+            stmt.setInt(4, categorie);
+            stmt.setString(5, quantite_par_unite);
+            stmt.setDouble(6, prix_unitaire);
+            stmt.setInt(7, unites_en_stock);
+            stmt.setInt(8, unites_commandees);
+            stmt.setInt(9, niveau_de_reappro);
+            
+            if (unites_commandees == 0 & niveau_de_reappro == 0) {
+                indisponible = 1;
+            } else {
+                indisponible = 0;
+            }
+            
+            stmt.setInt(10, indisponible);
+            
+            stmt.executeUpdate();
+
+        } catch (SQLException error) {
+            Logger.getLogger("DAO").log(Level.SEVERE, (String) null, error);
+            throw new SQLException(error.getMessage());
+        }
     }
     
+    /**
+     *
+     * @param panier Panier du client
+     * @param article Article dont il faut changer la quantité
+     * @param newQuantite La nouvelle quantité qui va remplacer la précédente
+     * @throws SQLException
+     */
+    public void editQuantityOrdered(HashMap<String, Integer> panier, String article, int newQuantite) throws SQLException {
+        panier.put(article, newQuantite);
+    }
 
     public void addPurchaseOrders() throws SQLException {
 
@@ -498,8 +617,7 @@ public class DAO {
 
     public static void main(String[] args) throws SQLException {
         DAO dao = new DAO(DataSourceFactory.getDataSource());
-        
-        System.out.println(dao.showCAByClient("VINET", "1994-08-04", "1994-10-19"));
+
     }
 
 }
