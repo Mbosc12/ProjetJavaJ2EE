@@ -587,6 +587,31 @@ public class DAO {
     }
     
     /**
+     * 
+     * Supprimer un produit de la table PRODUIT
+     * 
+     * @param reference Reference du produit
+     * @throws SQLException 
+     */
+    public void deleteProduit(int reference) throws SQLException {
+        
+        String sql = "DELETE FROM PRODUIT WHERE REFERENCE = ?";
+        
+        try ( Connection connection = myDataSource.getConnection();
+                PreparedStatement stmt = connection.prepareStatement(sql);
+                ) {
+            stmt.setInt(1, reference);
+            
+            stmt.executeUpdate();
+        }
+        catch (SQLException error) {
+            Logger.getLogger("DAO").log(Level.SEVERE, (String) null, error);
+            throw new SQLException(error.getMessage());
+        }
+        
+    }
+    
+    /**
      *
      * @param panier Panier du client
      * @param article Article dont il faut changer la quantité
@@ -617,6 +642,8 @@ public class DAO {
 
     public static void main(String[] args) throws SQLException {
         DAO dao = new DAO(DataSourceFactory.getDataSource());
+        
+        dao.deleteProduit(78);
 
     }
 
