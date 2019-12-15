@@ -9,7 +9,6 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.List;
 import javax.sql.DataSource;
 import model.ClientEntity;
 import model.DAO;
@@ -23,7 +22,7 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author Axel
+ * @author lauriecoumes
  */
 public class DAOTest {
 
@@ -39,7 +38,7 @@ public class DAOTest {
         // On crée le schema de la base de test
         executeSQLScript(connection, "comptoirs_schema_derby.sql");
         // On y met des données
-        executeSQLScript(connection, "comptoirs_data.sql");	
+        executeSQLScript(connection, "comptoirs_data.sql");
         // On crée l'objet à tester
         dao = new DAO(DataSource);
 
@@ -47,16 +46,16 @@ public class DAOTest {
                 "Représentant(e)", "Obere Str. 57", "Berlin", null, "12209",
                 "Allemagne", "030-0074321", "030-0076545");
     }
-    
-    private void executeSQLScript(Connection connexion, String filename)  throws IOException, SqlToolError, SQLException {
-		// On initialise la base avec le contenu d'un fichier de test
-		String sqlFilePath = this.getClass().getResource(filename).getFile();
-		SqlFile sqlFile = new SqlFile(new File(sqlFilePath));
 
-		sqlFile.setConnection(connexion);
-		sqlFile.execute();
-		sqlFile.closeReader();		
-	}
+    private void executeSQLScript(Connection connexion, String filename) throws IOException, SqlToolError, SQLException {
+        // On initialise la base avec le contenu d'un fichier de test
+        String sqlFilePath = this.getClass().getResource(filename).getFile();
+        SqlFile sqlFile = new SqlFile(new File(sqlFilePath));
+
+        sqlFile.setConnection(connexion);
+        sqlFile.execute();
+        sqlFile.closeReader();
+    }
 
     @After
     public void tearDown() throws SQLException {
