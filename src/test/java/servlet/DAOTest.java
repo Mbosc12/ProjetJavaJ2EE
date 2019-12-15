@@ -37,9 +37,9 @@ public class DAOTest {
         DataSource = getDataSource();
         connection = DataSource.getConnection();
         // On crée le schema de la base de test
-        //executeSQLScript(connection, "comptoirs_schema_derby.sql");
+        executeSQLScript(connection, "comptoirs_schema_derby.sql");
         // On y met des données
-        //executeSQLScript(connection, "comptoirs_data.sql");	
+        executeSQLScript(connection, "comptoirs_data.sql");	
         // On crée l'objet à tester
         dao = new DAO(DataSource);
 
@@ -47,6 +47,16 @@ public class DAOTest {
                 "Représentant(e)", "Obere Str. 57", "Berlin", null, "12209",
                 "Allemagne", "030-0074321", "030-0076545");
     }
+    
+    private void executeSQLScript(Connection connexion, String filename)  throws IOException, SqlToolError, SQLException {
+		// On initialise la base avec le contenu d'un fichier de test
+		String sqlFilePath = this.getClass().getResource(filename).getFile();
+		SqlFile sqlFile = new SqlFile(new File(sqlFilePath));
+
+		sqlFile.setConnection(connexion);
+		sqlFile.execute();
+		sqlFile.closeReader();		
+	}
 
     @After
     public void tearDown() throws SQLException {
