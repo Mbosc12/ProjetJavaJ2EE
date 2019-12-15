@@ -424,6 +424,39 @@ public class DAO {
         }
         return result;
     }
+    
+    public double showCAByCountry(String pays, String saisie_le,
+            String envoyee_le) throws SQLException {
+        double result = 0;
+        
+        String sql = "SELECT PRIX_UNITAIRE*QUANTITE AS CHIFFRE_DAFFAIRES "
+                + "FROM LIGNE, COMMANDE, PRODUIT "
+                + "WHERE LIGNE.COMMANDE = COMMANDE.NUMERO "
+                + "AND PRODUIT.REFERENCE = LIGNE.PRODUIT "
+                + "AND COMMANDE.PAYS_LIVRAISON = ? "
+                + "AND COMMANDE.SAISIE_LE >= ? "
+                + "AND COMMANDE.ENVOYEE_LE <= ?";
+        
+        try ( Connection connection = myDataSource.getConnection();
+                PreparedStatement stmt = connection.prepareStatement(sql);
+                ) {
+            stmt.setString(1, pays);
+            stmt.setString(2, saisie_le);
+            stmt.setString(3, envoyee_le);
+        
+            ResultSet rs = stmt.executeQuery();
+            
+            while(rs.next()) {
+                double chiffre_daffaires = rs.getInt("CHIFFRE_DAFFAIRES");
+                result += chiffre_daffaires;
+            }
+            
+        } catch (SQLException error) {
+            Logger.getLogger("DAO").log(Level.SEVERE, (String) null, error);
+            throw new SQLException(error.getMessage());
+        }
+        return result;
+    }
 
     public static void main(String[] args) throws SQLException {
         DAO dao = new DAO(DataSourceFactory.getDataSource());
@@ -458,7 +491,7 @@ public class DAO {
         System.out.println(dao.ClientCommande("ALFKI"));
         System.out.println(dao.getPersonalData("ALFKI"));*/
         
-        System.out.println(dao.showCAByCategorie(1, "1994-08-04", "1994-10-19"));
+        System.out.println(dao.showCAByCountry("France", "1994-08-04", "1994-10-19"));
     }
 
 }
