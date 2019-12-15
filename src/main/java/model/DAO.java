@@ -532,9 +532,8 @@ public class DAO {
      * @throws SQLException 
      */
     public void addProduit(String nom, int fournisseur, int categorie, 
-            String quantite_par_unite, double prix_unitaire, 
-            int unites_en_stock, int unites_commandees, 
-            int niveau_de_reappro) 
+            String quantite_par_unite, double prix_unitaire,int unites_en_stock, 
+            int unites_commandees, int niveau_de_reappro) 
             throws SQLException {
         int result;
         String reference_max = "SELECT MAX(REFERENCE) AS REFERENCE_MAX FROM APP.PRODUIT";
@@ -603,8 +602,66 @@ public class DAO {
             stmt.setInt(1, reference);
             
             stmt.executeUpdate();
+        } catch (SQLException error) {
+            Logger.getLogger("DAO").log(Level.SEVERE, (String) null, error);
+            throw new SQLException(error.getMessage());
         }
-        catch (SQLException error) {
+    }
+    
+    /**
+     * 
+     * Editer les informations d'un produit
+     * 
+     * @param reference Reference du produit
+     * @param nom Nom du produit
+     * @param fournisseur Numéro du fournisseur du produit
+     * @param categorie Numéro de la catégorie du produit
+     * @param quantite_par_unite Description de la quantité par unité du produit
+     * @param prix_unitaire Prix unitaire du produit
+     * @param unites_en_stock Unités en stock du produit
+     * @param unites_commandees Unités commandées du produit
+     * @param niveau_de_reappro Niveau de réapprovisionnement du produit
+     * @throws SQLException 
+     */
+    public void editProduit(int reference, String nom, int fournisseur, 
+            int categorie, String quantite_par_unite, double prix_unitaire, 
+            int unites_en_stock, int unites_commandees, int niveau_de_reappro) 
+            throws SQLException {
+        
+        int indisponible;
+        String sql = "UPDATE PRODUIT SET NOM = ?, FOURNISSEUR = ?, "
+                + "CATEGORIE = ?, QUANTITE_PAR_UNITE = ?, "
+                + "PRIX_UNITAIRE = ?, UNITES_EN_STOCK = ?, "
+                + "UNITES_COMMANDEES = ?, NIVEAU_DE_REAPPRO = ?, "
+                + "INDISPONIBLE = ? "
+                + "WHERE REFERENCE = ?";
+        
+        try ( Connection connection = myDataSource.getConnection();
+                PreparedStatement stmt = connection.prepareStatement(sql);
+                ) {
+            
+            stmt.setString(1, nom);
+            stmt.setInt(2, fournisseur);
+            stmt.setInt(3, categorie);
+            stmt.setString(4, quantite_par_unite);
+            stmt.setDouble(5, prix_unitaire);
+            stmt.setInt(6, unites_en_stock);
+            stmt.setInt(7, unites_commandees);
+            stmt.setInt(8, niveau_de_reappro);
+            
+            if (unites_commandees == 0 & niveau_de_reappro == 0) {
+                indisponible = 1;
+            } else {
+                indisponible = 0;
+            }
+            
+            stmt.setInt(9, indisponible);
+            
+            stmt.setInt(10, reference);
+            
+            stmt.executeUpdate();
+            
+        } catch (SQLException error) {
             Logger.getLogger("DAO").log(Level.SEVERE, (String) null, error);
             throw new SQLException(error.getMessage());
         }
