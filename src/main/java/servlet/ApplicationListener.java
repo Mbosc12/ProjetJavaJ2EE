@@ -64,7 +64,7 @@ public class ApplicationListener implements ServletContextListener {
             } else {
                 Logger.getLogger("AjaxMaven").log(Level.SEVERE, "Errors creating database");
             }
-
+            
             int script = ij.runScript(connection, this.getClass().getResourceAsStream("comptoirs_data.sql"), "UTF-8", System.out, "UTF-8");
             if (script == 0) {
                 Logger.getLogger("AjaxMaven").log(Level.INFO, "Database succesfully created");
