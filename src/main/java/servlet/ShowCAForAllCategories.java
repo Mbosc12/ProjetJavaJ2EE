@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Properties;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -24,8 +25,8 @@ import model.DataSourceFactory;
  *
  * @author lauriecoumes
  */
-@WebServlet(name = "ShowCAByCategorie", urlPatterns = {"/ShowCAByCategorie"})
-public class ShowCAByCategorie extends HttpServlet {
+@WebServlet(name = "ShowCAForAllCategories", urlPatterns = {"/ShowCAForAllCategories"})
+public class ShowCAForAllCategories extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -42,16 +43,16 @@ public class ShowCAByCategorie extends HttpServlet {
         
         // Créér le DAO avec sa source de données
         DAO dao = new DAO(DataSourceFactory.getDataSource());
-
-        String categorie = request.getParameter("categorie");
+        HashMap<Integer, Double> ca = new HashMap<>();
+        
         String saisie_le = request.getParameter("saisie_le");
         String envoyee_le = request.getParameter("envoyee_le");
         
         Properties resultat = new Properties();
+        
         try {
-            resultat.put("records", dao.showCAByCategorie(
-                    Integer.parseInt(categorie), saisie_le, envoyee_le
-            ));
+        ca = dao.showCaForAllCategories(saisie_le, envoyee_le);
+        
         } catch (SQLException ex) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             resultat.put("records", Collections.EMPTY_LIST);
