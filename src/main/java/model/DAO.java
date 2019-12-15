@@ -457,41 +457,44 @@ public class DAO {
         }
         return result;
     }
+    
+    public double showCAByClient(String code, String saisie_le,
+            String envoyee_le) throws SQLException {
+        double result = 0;
+        
+        String sql = "SELECT PRIX_UNITAIRE*QUANTITE AS CHIFFRE_DAFFAIRES "
+                + "FROM LIGNE, COMMANDE, PRODUIT "
+                + "WHERE LIGNE.COMMANDE = COMMANDE.NUMERO "
+                + "AND PRODUIT.REFERENCE = LIGNE.PRODUIT "
+                + "AND COMMANDE.CLIENT = ? "
+                + "AND COMMANDE.SAISIE_LE >= ? "
+                + "AND COMMANDE.ENVOYEE_LE <= ?";
+        
+        try (Connection connection = myDataSource.getConnection();
+                PreparedStatement stmt = connection.prepareStatement(sql);
+                ) {
+            stmt.setString(1, code);
+            stmt.setString(2, saisie_le);
+            stmt.setString(3, envoyee_le);
+            
+            ResultSet rs = stmt.executeQuery();
+            
+            while(rs.next()) {
+                double chiffre_daffaires = rs.getInt("CHIFFRE_DAFFAIRES");
+                result += chiffre_daffaires;
+            }
+            
+        } catch (SQLException error) {
+            Logger.getLogger("DAO").log(Level.SEVERE, (String) null, error);
+            throw new SQLException(error.getMessage());
+        }
+        return result;
+    }
 
     public static void main(String[] args) throws SQLException {
         DAO dao = new DAO(DataSourceFactory.getDataSource());
-        //Afficher toutes les catégories
-        // HashMap<Integer, Categorie> result = dao.allCategories();
-
-        // Ajouter + supprimer du panier
-        /*HashMap<ProduitEntity, Integer> panier = new HashMap<>();
-
-        ProduitEntity chang = new ProduitEntity(2, "Chang", 95.00, 17);
-        dao.addToCart(panier, chang, 3);
         
-        ProduitEntity ikura = new ProduitEntity(10, "Ikura", 155.00, 31);
-        dao.addToCart(panier, ikura, 5);
-        System.out.print(panier);
-        
-        dao.deleteFromCart(panier, chang);
-        System.out.print(panier);*/
-        int[] productID = new int[]{2, 16, 57};
-        int[] quantite = new int[]{10, 3, 8};
-
-        /*dao.confirmCart("ALFKI", "Alfreds Futterkiste",
-                "Obere Str. 57", "Berlin", null, "12209", "Allemange",
-                productID, quantite);*/
-        //System.out.print(dao.numberOfCommandes("ALFKI"));
-
-        /*System.out.println(panier);
-        
-        System.out.println(panier);
-        dao.editQuantityOrdered(panier, "Ikura", 10);
-        System.out.println(panier);
-        System.out.println(dao.ClientCommande("ALFKI"));
-        System.out.println(dao.getPersonalData("ALFKI"));*/
-        
-        System.out.println(dao.showCAByCountry("France", "1994-08-04", "1994-10-19"));
+        System.out.println(dao.showCAByClient("VINET", "1994-08-04", "1994-10-19"));
     }
 
 }
