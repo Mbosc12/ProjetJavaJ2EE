@@ -44,7 +44,7 @@ public class ShowCommande extends HttpServlet {
         
         Properties resultat = new Properties();
         try {
-            resultat.put("commands", dao.ClientCommande(code));
+            resultat.put("commands", dao.showCommandeByClient(code));
         } catch (SQLException ex) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             resultat.put("commands", Collections.EMPTY_LIST);

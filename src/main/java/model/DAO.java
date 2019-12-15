@@ -248,24 +248,6 @@ public class DAO {
         }
     }
 
-    public void addPurchaseOrders() throws SQLException {
-
-    }
-
-    public void editPurchaseOrders() throws SQLException {
-
-    }
-
-    public void deletePurchaseOrders() throws SQLException {
-
-    }
-
-    public void addToCart(ProduitEntity p, int qte) {
-    }
-
-    public void deleteFromCart(ProduitEntity p) {
-    }
-
     /**
      *
      * @param panier Panier du client
@@ -340,7 +322,7 @@ public class DAO {
         }
     }
 
-    public List<CommandeEntity> ClientCommande(String code) throws SQLException {
+    public List<CommandeEntity> showCommandeByClient(String code) throws SQLException {
 
         String sql = "SELECT * FROM APP.COMMANDE WHERE CLIENT = ?";
         List<CommandeEntity> result = new LinkedList<>();
@@ -489,6 +471,29 @@ public class DAO {
             throw new SQLException(error.getMessage());
         }
         return result;
+    }
+    
+    public void addProduit() {
+        
+    }
+    
+
+    public void addPurchaseOrders() throws SQLException {
+
+    }
+
+    public void editPurchaseOrders() throws SQLException {
+
+    }
+
+    public void deletePurchaseOrders() throws SQLException {
+
+    }
+
+    public void addToCart(ProduitEntity p, int qte) {
+    }
+
+    public void deleteFromCart(ProduitEntity p) {
     }
 
     public static void main(String[] args) throws SQLException {
