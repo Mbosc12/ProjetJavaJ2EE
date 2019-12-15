@@ -93,13 +93,13 @@ public class DAO {
         return result;
     }
 
-    public List<ProduitEntity> ProductByCategorie(String code) throws SQLException {
+    public List<ProduitEntity> ProductByCategorie(int code) throws SQLException {
         List<ProduitEntity> result = new LinkedList<>();
         String sql = "SELECT * FROM APP.PRODUIT WHERE CATEGORIE = ?";
 
         try (Connection connection = myDataSource.getConnection(); // Ouvrir une connexion
                 PreparedStatement stmt = connection.prepareStatement(sql)) { // On crée un statement pour exécuter une requête
-            stmt.setInt(1, Integer.parseInt(code));
+            stmt.setInt(1, code);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     int reference = rs.getInt("REFERENCE");
@@ -804,10 +804,6 @@ public class DAO {
 
         int[] produitID = new int[]{2};
         int[] quantite = new int[]{4};
-
-        dao.confirmCart(client.getCode(), client.getSociete(), client.getAdresse(),
-                client.getVille(), client.getRegion(), client.getCodePostal(),
-                client.getPays(), produitID, quantite);
 
     }
 
