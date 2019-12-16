@@ -126,6 +126,9 @@ public class ConnexionController extends HttpServlet {
         if (session != null) {
             session.invalidate();
         }
+        else {
+            request.getRequestDispatcher("index.jsp");
+        }
     }
 
     private String findUserInSession(HttpServletRequest request) {

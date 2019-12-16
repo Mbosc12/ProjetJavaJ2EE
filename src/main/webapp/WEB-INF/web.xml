@@ -43,6 +43,15 @@
         <url-pattern>/protected/*</url-pattern>
         <dispatcher>REQUEST</dispatcher>
     </filter-mapping>
+    <filter>
+        <filter-name>ProtectedPageFilters</filter-name>
+        <filter-class>filters.ProtectedPageFilters</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>ProtectedPageAdmin</filter-name>
+        <url-pattern>/admin/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+    </filter-mapping>
     <!-- Contrôle le temps au bout duquel une session inactive est détruite automatiquement -->
     <servlet-mapping>
         <servlet-name>ShowProducts</servlet-name>
@@ -67,6 +76,6 @@
         </session-timeout>
     </session-config>
     <welcome-file-list>
-        <welcome-file>ConnexionController</welcome-file>
+        <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
 </web-app>

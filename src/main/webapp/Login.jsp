@@ -18,7 +18,7 @@
 		--%>
 		<div style="color:red">${errorMessage}</div>
 
-		<form action="<c:url value="/" />" method="POST"> <!-- l'action par défaut est l'URL courant, qui va rappeler la servlet -->
+		<form action="<c:url value="ConnexionController" />" method="POST"> <!-- l'action par défaut est l'URL courant, qui va rappeler la servlet -->
 			Utilisateur  : <input name='loginParam'><br>
 			Mot de passe  : <input name='passwordParam' type='password'><br>
 			<input type='submit' name='action' value='login'>
