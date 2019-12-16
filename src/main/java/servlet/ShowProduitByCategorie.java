@@ -44,7 +44,7 @@ public class ShowProduitByCategorie extends HttpServlet {
 
         Properties resultat = new Properties();
         try {
-            resultat.put("prod", dao.ProductByCategorie(categorie));
+            resultat.put("prod", dao.ProductByCategorie(Integer.parseInt(categorie)));
         } catch (SQLException ex) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             resultat.put("prod", Collections.EMPTY_LIST);

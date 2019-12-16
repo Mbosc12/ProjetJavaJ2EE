@@ -4,14 +4,29 @@ public class ProduitEntity {
 
     int reference;
     String nom;
-    double prix;
-    int stock;
+    int fournisseur;
+    int categorie;
+    String quantite_par_unite;
+    double prix_unitaire;
+    int unites_en_stock;
+    int unites_commandees;
+    int niveau_de_reappro;
+    int indisponible;
 
-    public ProduitEntity(int reference, String nom, Double prix, int stock) {
+    public ProduitEntity(int reference, String nom, int fournisseur, 
+            int categorie, String quantite_par_unite, double prix_unitaire, 
+            int unites_en_stock, int unites_commandees, int niveau_de_reappro,
+            int indisponible) {
         this.reference = reference;
         this.nom = nom;
-        this.prix = prix;
-        this.stock = stock;
+        this.fournisseur = fournisseur;
+        this.categorie = categorie;
+        this.quantite_par_unite = quantite_par_unite;
+        this.prix_unitaire = prix_unitaire;
+        this.unites_en_stock = unites_en_stock;
+        this.unites_commandees = unites_commandees;
+        this.niveau_de_reappro = niveau_de_reappro;
+        this.indisponible = indisponible;
     }
 
     public int getReference() {
@@ -21,12 +36,36 @@ public class ProduitEntity {
     public String getNom() {
         return nom;
     }
-
-    public Double getPrix() {
-        return prix;
+    
+    public int getFournisseur() {
+        return fournisseur;
     }
     
-    public int getStock() {
-        return stock;
+    public int getCategorie() {
+        return categorie;
+    }
+    
+    public String getQuantiteParUnite() {
+        return quantite_par_unite;
+    }
+
+    public double getPrixUnitaire() {
+        return prix_unitaire;
+    }
+    
+    public int getUnitesEnStock() {
+        return unites_en_stock;
+    }
+    
+    public int getUnitesCommandees() {
+        return unites_commandees;
+    }
+    
+    public int getNiveauDeReappro() {
+        return niveau_de_reappro;
+    }
+    
+    public int getIndisponible() {
+        return indisponible;
     }
 }
