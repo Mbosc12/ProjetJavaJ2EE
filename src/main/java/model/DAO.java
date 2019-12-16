@@ -78,10 +78,19 @@ public class DAO {
             while (rs.next()) {
                 int reference = rs.getInt("REFERENCE");
                 String nom = rs.getString("NOM");
-                double prix = rs.getFloat("PRIX_UNITAIRE");
-                int stock = rs.getInt("Unites_en_stock");
+                int fournisseur = rs.getInt("FOURNISSEUR");
+                int categorie = rs.getInt("CATEGORIE");
+                String quantite_par_unite = rs.getString("QUANTITE_PAR_UNITE");
+                double prix_unitaire = rs.getFloat("PRIX_UNITAIRE");
+                int unites_en_stock = rs.getInt("UNITES_EN_STOCK");
+                int unites_commandees = rs.getInt("UNITES_COMMANDEES");
+                int niveau_de_reappro = rs.getInt("NIVEAU_DE_REAPPRO");
+                int indisponible = rs.getInt("INDISPONIBLE");
 
-                ProduitEntity product = new ProduitEntity(reference, nom, prix, stock);
+                ProduitEntity product = new ProduitEntity(reference, nom,
+                        fournisseur, categorie, quantite_par_unite, prix_unitaire,
+                        unites_en_stock, unites_commandees, niveau_de_reappro,
+                        indisponible);
                 result.add(product);
             }
 
@@ -104,10 +113,19 @@ public class DAO {
                 while (rs.next()) {
                     int reference = rs.getInt("REFERENCE");
                     String nom = rs.getString("NOM");
-                    double prix = rs.getFloat("PRIX_UNITAIRE");
-                    int stock = rs.getInt("Unites_en_stock");
+                    int fournisseur = rs.getInt("FOURNISSEUR");
+                    int categorie = rs.getInt("CATEGORIE");
+                    String quantite_par_unite = rs.getString("QUANTITE_PAR_UNITE");
+                    double prix_unitaire = rs.getFloat("PRIX_UNITAIRE");
+                    int unites_en_stock = rs.getInt("UNITES_EN_STOCK");
+                    int unites_commandees = rs.getInt("UNITES_COMMANDEES");
+                    int niveau_de_reappro = rs.getInt("NIVEAU_DE_REAPPRO");
+                    int indisponible = rs.getInt("INDISPONIBLE");
 
-                    ProduitEntity product = new ProduitEntity(reference, nom, prix, stock);
+                    ProduitEntity product = new ProduitEntity(reference, nom,
+                            fournisseur, categorie, quantite_par_unite, prix_unitaire,
+                            unites_en_stock, unites_commandees, niveau_de_reappro,
+                            indisponible);
                     result.add(product);
                 }
             }
@@ -117,6 +135,58 @@ public class DAO {
             throw new SQLException(error.getMessage());
         }
 
+        return result;
+    }
+
+    public ProduitEntity showProduit(int reference) throws SQLException {
+
+        ProduitEntity produit = null;
+
+        String sql = "SELECT * FROM PRODUIT WHERE REFERENCE = ?";
+
+        try (Connection connection = myDataSource.getConnection();
+                PreparedStatement stmt = connection.prepareStatement(sql);) {
+            stmt.setInt(1, reference);
+            ResultSet rs = stmt.executeQuery();
+            rs.next();
+            String nom = rs.getString("NOM");
+            int fournisseur = rs.getInt("FOURNISSEUR");
+            int categorie = rs.getInt("CATEGORIE");
+            String quantite_par_unite = rs.getString("QUANTITE_PAR_UNITE");
+            double prix_unitaire = rs.getFloat("PRIX_UNITAIRE");
+            int unites_en_stock = rs.getInt("UNITES_EN_STOCK");
+            int unites_commandees = rs.getInt("UNITES_COMMANDEES");
+            int niveau_de_reappro = rs.getInt("NIVEAU_DE_REAPPRO");
+            int indisponible = rs.getInt("INDISPONIBLE");
+
+            produit = new ProduitEntity(reference, nom, fournisseur, categorie,
+                    quantite_par_unite, prix_unitaire, unites_en_stock,
+                    unites_commandees, niveau_de_reappro, indisponible);
+
+        } catch (SQLException error) {
+            Logger.getLogger("DAO").log(Level.SEVERE, null, error);
+            throw new SQLException(error.getMessage());
+        }
+        return produit;
+    }
+
+    public List<String> showPays() throws SQLException {
+        List<String> result = new LinkedList<>();
+
+        String sql = "SELECT DISTINCT PAYS_LIVRAISON FROM APP.COMMANDE";
+
+        try (Connection connection = myDataSource.getConnection();
+                Statement stmt = connection.createStatement();
+                ResultSet rs = stmt.executeQuery(sql);) {
+
+            while (rs.next()) {
+                result.add(rs.getString("PAYS_LIVRAISON"));
+            }
+
+        } catch (SQLException error) {
+            Logger.getLogger("DAO").log(Level.SEVERE, null, error);
+            throw new SQLException(error.getMessage());
+        }
         return result;
     }
 
@@ -322,12 +392,31 @@ public class DAO {
             }
 
             connection.commit();
-            
+
         } catch (SQLException error) {
             Logger.getLogger("DAO").log(Level.SEVERE, null, error);
             throw new SQLException(error.getMessage());
         }
+    }
 
+    public int getUnitesCommandees(int reference) throws SQLException {
+        int result;
+        String sql = "SELECT UNITES_COMMANDEES "
+                + "FROM APP.PRODUIT "
+                + "WHERE REFERENCE = ?";
+
+        try (Connection connection = myDataSource.getConnection();
+                PreparedStatement stmt = connection.prepareStatement(sql);) {
+            stmt.setInt(1, reference);
+            ResultSet rs = stmt.executeQuery();
+            rs.next();
+            result = rs.getInt("UNITES_COMMANDEES");
+
+        } catch (SQLException error) {
+            Logger.getLogger("DAO").log(Level.SEVERE, null, error);
+            throw new SQLException(error.getMessage());
+        }
+        return result;
     }
 
     public List<CommandeEntity> showCommandeByClient(String code) throws SQLException {
@@ -431,37 +520,37 @@ public class DAO {
         }
         return result;
     }
-    
+
     /**
-     * 
-     * Afficher les chiffres d'affaires de chaque catégorie
-     * 
+     *
+     * Afficher les chiffres d'affaires de toutes les catégories
+     *
      * @param saisie_le A partir de quelle date afficher le chiffre d'affaires
      * @param envoyee_le Jusqu'à quelle date afficher le chiffre d'affaires
      * @return Dictionnaire dont la clé est le code de la catégorie et la valeur
-     *         est le chiffre d'affaires correspondant à la catégorie
-     * @throws SQLException 
+     * est le chiffre d'affaires correspondant à la catégorie
+     * @throws SQLException
      */
-    public HashMap<Integer, Double> showCaForAllCategories(String saisie_le, 
+    public HashMap<Integer, Double> showCaForAllCategories(String saisie_le,
             String envoyee_le) throws SQLException {
-        
+
         HashMap<Integer, Double> result = new HashMap<>();
         List<Integer> categories = new LinkedList<>();
-        
+
         String sql = "SELECT * FROM CATEGORIE";
-        
-        try ( Connection connection = myDataSource.getConnection();
+
+        try (Connection connection = myDataSource.getConnection();
                 Statement stmt = connection.createStatement();
                 ResultSet rs = stmt.executeQuery(sql)) {
-            while(rs.next()) {
+            while (rs.next()) {
                 int categorie = rs.getInt("CODE");
-                categories.add(categorie);                
+                categories.add(categorie);
             }
-            
-            for(int i = 0; i<categories.size(); i++) {
+
+            for (int i = 0; i < categories.size(); i++) {
                 result.put(categories.get(i), this.showCAByCategorie(categories.get(i), saisie_le, envoyee_le));
             }
-            
+
         } catch (SQLException error) {
             Logger.getLogger("DAO").log(Level.SEVERE, (String) null, error);
             throw new SQLException(error.getMessage());
@@ -510,43 +599,43 @@ public class DAO {
         }
         return result;
     }
-    
+
     /**
-     * 
+     *
      * Afficher les chiffres d'affaires de chaque pays
-     * 
+     *
      * @param saisie_le A partir de quelle date afficher le chiffre d'affaires
      * @param envoyee_le Jusqu'à quelle date afficher le chiffre d'affaires
-     * @return Dictionnaire dont la clé est le pays et la valeur est le chiffre 
-     *         d'affaires correspondant au pays
-     * @throws SQLException 
+     * @return Dictionnaire dont la clé est le pays et la valeur est le chiffre
+     * d'affaires correspondant au pays
+     * @throws SQLException
      */
-    public HashMap<String, Double> showCaForAllCountries(String saisie_le, 
+    public HashMap<String, Double> showCaForAllCountries(String saisie_le,
             String envoyee_le) throws SQLException {
-        
+
         HashMap<String, Double> result = new HashMap<>();
         List<String> listePays = new LinkedList<>();
-        
+
         String sql = "SELECT DISTINCT PAYS_LIVRAISON FROM APP.COMMANDE";
-        
-        try ( Connection connection = myDataSource.getConnection();
+
+        try (Connection connection = myDataSource.getConnection();
                 Statement stmt = connection.createStatement();
                 ResultSet rs = stmt.executeQuery(sql)) {
-            while(rs.next()) {
+            while (rs.next()) {
                 String pays = rs.getString("PAYS_LIVRAISON");
-                listePays.add(pays);                
+                listePays.add(pays);
             }
-            
-            for(int i = 0; i<listePays.size(); i++) {
+
+            for (int i = 0; i < listePays.size(); i++) {
                 result.put(listePays.get(i), this.showCAByCountry(listePays.get(i), saisie_le, envoyee_le));
             }
-            
+
         } catch (SQLException error) {
             Logger.getLogger("DAO").log(Level.SEVERE, (String) null, error);
             throw new SQLException(error.getMessage());
         }
         return result;
-    } 
+    }
 
     /**
      *
@@ -736,46 +825,4 @@ public class DAO {
         }
 
     }
-
-    /**
-     *
-     * @param panier Panier du client
-     * @param article Article dont il faut changer la quantité
-     * @param newQuantite La nouvelle quantité qui va remplacer la précédente
-     * @throws SQLException
-     */
-    public void editQuantityOrdered(HashMap<String, Integer> panier, String article, int newQuantite) throws SQLException {
-        panier.put(article, newQuantite);
-    }
-
-    public void addPurchaseOrders() throws SQLException {
-
-    }
-
-    public void editPurchaseOrders() throws SQLException {
-
-    }
-
-    public void deletePurchaseOrders() throws SQLException {
-
-    }
-
-    public void addToCart(ProduitEntity p, int qte) {
-    }
-
-    public void deleteFromCart(ProduitEntity p) {
-    }
-
-    public static void main(String[] args) throws SQLException {
-        DAO dao = new DAO(DataSourceFactory.getDataSource());
-
-        ClientEntity client = new ClientEntity("ALFKI", "Alfreds Futterkiste",
-                "Maria Anders", "Représentant(e)", "Obere Str. 57", "Berlin",
-                null, "12209", "Allemagne", "030_0074321", "030-0076545");
-
-        int[] produitID = new int[]{2};
-        int[] quantite = new int[]{4};
-
-    }
-
 }
