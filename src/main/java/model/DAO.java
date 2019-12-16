@@ -718,7 +718,7 @@ public class DAO {
 
         try (Connection connection = myDataSource.getConnection();
                 PreparedStatement stmt = connection.prepareStatement(insert);) {
-            System.out.print("RESULT " + result);
+            
             stmt.setInt(1, result);
             stmt.setString(2, nom);
             stmt.setInt(3, fournisseur);
