@@ -29,6 +29,14 @@
         <servlet-name>ShowClientInformations</servlet-name>
         <servlet-class>servlet.ShowClientInformations</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>EditionProduit</servlet-name>
+        <servlet-class>servlet.EditionProduit</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SupprimerProduit</servlet-name>
+        <servlet-class>servlet.SupprimerProduit</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ConnexionController</servlet-name>
         <url-pattern>/ConnexionController</url-pattern>
@@ -68,6 +76,14 @@
     <servlet-mapping>
         <servlet-name>ShowClientInformations</servlet-name>
         <url-pattern>/ShowClientInformations</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>EditionProduit</servlet-name>
+        <url-pattern>/EditionProduit</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SupprimerProduit</servlet-name>
+        <url-pattern>/SupprimerProduit</url-pattern>
     </servlet-mapping>
     <session-config>
         <!-- Un temps volontairement court : 1 minute -->
