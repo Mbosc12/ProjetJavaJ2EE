@@ -56,7 +56,7 @@ public class EditClientPersonalData extends HttpServlet {
         String fax = request.getParameter("fax");
         
         try {
-            resultat.put("records", dao.showClient(code));
+            resultat.put("records", dao.showClientInList(code));
             dao.editClientPersonalData(code, societe, contact, fonction, 
                     adresse, ville, region, code_postal, pays, telephone, fax);
             

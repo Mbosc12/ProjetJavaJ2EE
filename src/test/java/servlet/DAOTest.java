@@ -165,7 +165,7 @@ public class DAOTest {
                 "Maria Anders", "Représentant(e)", "Obere Str. 57", "Berlin",
                 null, "12209", "Allemagne", "030-0074321", "030-0076545");
 
-        cli.equals(dao.showClient("ALFKI"));
+        cli.equals(dao.showClientInList("ALFKI"));
     }
 
     /**

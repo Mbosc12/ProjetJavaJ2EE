@@ -44,7 +44,7 @@ public class ShowClientInformations extends HttpServlet {
         
         Properties resultat = new Properties();
         try {
-            resultat.put("info", dao.showClient(code));
+            resultat.put("info", dao.showClientInList(code));
         } catch (SQLException ex) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             resultat.put("info", Collections.EMPTY_LIST);
