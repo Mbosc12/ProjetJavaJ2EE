@@ -37,6 +37,10 @@
         <servlet-name>SupprimerProduit</servlet-name>
         <servlet-class>servlet.SupprimerProduit</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ShowOneProduit</servlet-name>
+        <servlet-class>servlet.ShowOneProduit</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ConnexionController</servlet-name>
         <url-pattern>/ConnexionController</url-pattern>
@@ -52,8 +56,8 @@
         <dispatcher>REQUEST</dispatcher>
     </filter-mapping>
     <filter>
-        <filter-name>ProtectedPageFilters</filter-name>
-        <filter-class>filters.ProtectedPageFilters</filter-class>
+        <filter-name>ProtectedPageAdmin</filter-name>
+        <filter-class>filters.ProtectedPageAdmin</filter-class>
     </filter>
     <filter-mapping>
         <filter-name>ProtectedPageAdmin</filter-name>
@@ -84,6 +88,10 @@
     <servlet-mapping>
         <servlet-name>SupprimerProduit</servlet-name>
         <url-pattern>/SupprimerProduit</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ShowOneProduit</servlet-name>
+        <url-pattern>/ShowOneProduit</url-pattern>
     </servlet-mapping>
     <session-config>
         <!-- Un temps volontairement court : 1 minute -->

@@ -8,7 +8,7 @@
         <!-- On charge le moteur de template mustache https://mustache.github.io/ -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/0.8.1/mustache.min.js"></script>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <title>Panel Client</title>
         <script>
             $(document).ready(// Exécuté à la fin du chargement de la page
                     function () {
@@ -54,6 +54,7 @@
                             }
                 });
             }
+            
             // Fonction qui traite les erreurs de la requête
             function showError(xhr, status, message) {
                 alert(JSON.parse(xhr.responseText).message);
@@ -77,7 +78,12 @@
         <div class="persodata">
 
         </div>
-
+        <br>
+        
+        <button>Modifier mes informations personnelles</button>
+        
+        <br>
+        <br>
         <form action="<c:url value="../ConnexionController"/>" method="POST"> 
             <input type='submit' name='action' value='logout'>
     </form>
