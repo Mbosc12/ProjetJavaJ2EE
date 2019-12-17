@@ -102,6 +102,12 @@ public class DAO {
         return result;
     }
 
+    /**
+     * 
+     * @param code Code du client
+     * @return Liste des produits en fonction d'une catégorie
+     * @throws SQLException 
+     */
     public List<ProduitEntity> ProductByCategorie(int code) throws SQLException {
         List<ProduitEntity> result = new LinkedList<>();
         String sql = "SELECT * FROM APP.PRODUIT WHERE CATEGORIE = ?";
@@ -138,6 +144,12 @@ public class DAO {
         return result;
     }
 
+    /**
+     * 
+     * @param reference Référence du produit
+     * @return Un produit
+     * @throws SQLException 
+     */
     public ProduitEntity showProduit(int reference) throws SQLException {
 
         ProduitEntity produit = null;
@@ -170,6 +182,11 @@ public class DAO {
         return produit;
     }
 
+    /**
+     * 
+     * @return Liste des pays
+     * @throws SQLException 
+     */
     public List<String> showPays() throws SQLException {
         List<String> result = new LinkedList<>();
 
@@ -219,7 +236,13 @@ public class DAO {
         return result;
     }
 
-    public List<ClientEntity> showClient(String code) throws SQLException {
+    /**
+     * 
+     * @param code Code du client
+     * @return Les informations personnelles d'un client dans une liste
+     * @throws SQLException 
+     */
+    public List<ClientEntity> showClientInList(String code) throws SQLException {
 
         List<ClientEntity> client = new LinkedList();
         String sql = "SELECT * FROM APP.CLIENT WHERE CODE = ?";
@@ -245,6 +268,47 @@ public class DAO {
                 client.add( new ClientEntity(nom, societe, contact,
                         fonction, adresse, ville, region, code_postal, pays,
                         telephone, fax));
+            }
+
+        } catch (SQLException error) {
+            Logger.getLogger("DAO").log(Level.SEVERE, null, error);
+            throw new SQLException(error.getMessage());
+        }
+
+        return client;
+    }
+    
+    /**
+     * 
+     * @param code Code du client
+     * @return Les informations personnelles d'un client
+     * @throws SQLException 
+     */
+    public ClientEntity showClient(String code) throws SQLException {
+        ClientEntity client = null;
+        String sql = "SELECT * FROM APP.CLIENT WHERE CODE = ?";
+
+        try (Connection connection = myDataSource.getConnection(); // Ouvrir une connexion
+                PreparedStatement stmt = connection.prepareStatement(sql) // On crée un statement pour exécuter une requête
+                ) {
+            stmt.setString(1, code);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                String nom = rs.getString("CODE");
+                String societe = rs.getString("SOCIETE");
+                String contact = rs.getString("CONTACT");
+                String fonction = rs.getString("FONCTION");
+                String adresse = rs.getString("ADRESSE");
+                String ville = rs.getString("VILLE");
+                String region = rs.getString("REGION");
+                String code_postal = rs.getString("CODE_POSTAL");
+                String pays = rs.getString("PAYS");
+                String telephone = rs.getString("TELEPHONE");
+                String fax = rs.getString("FAX");
+                client = new ClientEntity(nom, societe, contact,
+                        fonction, adresse, ville, region, code_postal, pays,
+                        telephone, fax);
             }
 
         } catch (SQLException error) {
@@ -399,6 +463,12 @@ public class DAO {
         }
     }
 
+    /**
+     * 
+     * @param reference Référence d'un produit
+     * @return Les unités commandées pour un produit sélectionné
+     * @throws SQLException 
+     */
     public int getUnitesCommandees(int reference) throws SQLException {
         int result;
         String sql = "SELECT UNITES_COMMANDEES "
@@ -419,6 +489,12 @@ public class DAO {
         return result;
     }
 
+    /**
+     * 
+     * @param code Code du client
+     * @return Une liste contenant les commandes passées par un client
+     * @throws SQLException 
+     */
     public List<CommandeEntity> showCommandeByClient(String code) throws SQLException {
 
         String sql = "SELECT * FROM APP.COMMANDE WHERE CLIENT = ?";
@@ -718,7 +794,7 @@ public class DAO {
 
         try (Connection connection = myDataSource.getConnection();
                 PreparedStatement stmt = connection.prepareStatement(insert);) {
-            System.out.print("RESULT " + result);
+            
             stmt.setInt(1, result);
             stmt.setString(2, nom);
             stmt.setInt(3, fournisseur);

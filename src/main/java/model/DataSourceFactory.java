@@ -24,7 +24,7 @@ public class DataSourceFactory {
 		switch (TYPE) {
 			case server: // Derby mode serveur, doit être démarré indépendamment
 				org.apache.derby.jdbc.ClientDataSource ds = new org.apache.derby.jdbc.ClientDataSource();
-				ds.setDatabaseName("commerce électronique");
+				ds.setDatabaseName("champoDrive");
 				ds.setUser("app");
 				ds.setPassword("app");
 				// The host on which Network Server is running
