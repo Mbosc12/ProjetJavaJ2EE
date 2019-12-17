@@ -101,7 +101,17 @@
 
             function ajouterPan(Ref, Prix) {
                 var monPanier = new Panier();
-
+                var storage = localStorage.getItem("Panier"+Ref);
+                if (storage === null) {
+                    localStorage.setItem("Panier"+Ref,[Ref, 1, Prix]);
+                } else {
+                    localStorage.setItem("Panier"+Ref, [Ref, parseInt(storage[2], 10)+1, Prix]);
+                }
+                
+                
+                
+                
+                
                 monPanier.ajouterArticle(Ref, 1, Prix);
                 var tableau = document.getElementById("tableau");
                 var longueurTab = parseInt(document.getElementById("nbreLignes").innerHTML);
@@ -134,6 +144,7 @@
             function supprimer(code)
             {
                 var monPanier = new Panier();
+                localStorage.removeItem("Panier"+code);
                 var tableau = document.getElementById("tableau");
                 var longueurTab = parseInt(document.getElementById("nbreLignes").innerHTML);
                 if (longueurTab > 0)
@@ -164,7 +175,6 @@
                 document.getElementById("prixTotal").innerHTML = monPanier.getPrixPanier();
                 document.getElementById("nbreLignes").innerHTML = longueur;
             }
-
 
             // Fonction qui traite les erreurs de la requête
             function showError(xhr, status, message) {
@@ -211,7 +221,7 @@
                     </table>
                     <br><label>Prix du panier total</label> : <label id = "prixTotal"></label> €
                     <label id = "nbreLignes" hidden>0</label><br><br>
-                    <button>Valider le panier</button>
+                    <a href="/protected/validation.jsp"><button>Valider le panier</button></a>
                 </article>
             </div>
         </section>
