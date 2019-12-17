@@ -17,7 +17,7 @@
             );
     
             function validationCommande() {
-                for (var i = 1; i < localStorage.length - 1; i++) {
+                for (var i = 1; i < localStorage.length; i++) {
                     var it = localStorage.getItem("Panier" + i);        
                     console.log(it);
                     ShowProdName(i)
