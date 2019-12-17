@@ -6,7 +6,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Visiteur</title>
+        <title>Page d'accueil</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <!-- On charge jQuery -->
         <script	src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
@@ -90,8 +90,10 @@
                                 var user = document.getElementById("user").innerHTML;
                                 if (user === "") {
                                     $("#log").html('<a href="Login.jsp"><button>Se connecter</button></a>');
+                                } else if (user === "admin") {
+                                    $("#log").html('<a href="admin/admin.jsp"><button>Panel admin</button></a>');
                                 } else {
-                                    $("#log").html('<a href="protected/commandes.jsp"><button>Mon Compte</button></a>');
+                                    $("#log").html('<a href="protected/commandes.jsp"><button>Mon Compte</button></a>'); 
                                 }
                             }
                 });
@@ -185,9 +187,7 @@
                         <img src="images/logo.png" alt="logo" width="380">
                     </div>
                     <div class="right">
-                        <img class="icon" src="images/icon/magnifier.png" alt="logo" width="40">
-                        <img class="icon" src="images/icon/shopping-cart.png" alt="logo" width="40">
-                        <div id="log"></div>
+                        <div id="log" style="line-height: 40px;"></div>
                     </div>
                 </div>
                 <div class="navbar categories">
@@ -196,7 +196,7 @@
         </header>
         <section style="width: 80%;">
             <div id="prodcontent" style="margin: 0 auto; width: 90%; display: flex; justify-content: space-between;">
-                <ul class="product" style="width:80%;"></ul>
+                <ul class="product" style="width:80%; list-style-type: none;"></ul>
                 <article class="well form-inline pull-left col-lg-5">
                     <h1>Contenu du panier</h1>
                     <table id="tableau" class="table">
@@ -209,7 +209,7 @@
                             </tr>
                         </thead>
                     </table>
-                    <br><label>Prix du panier total</label> : <label id = "prixTotal"></label>
+                    <br><label>Prix du panier total</label> : <label id = "prixTotal"></label> €
                     <label id = "nbreLignes" hidden>0</label><br><br>
                     <button>Valider le panier</button>
                 </article>
@@ -219,13 +219,13 @@
         <script id="productsTemplate" type="text/template">
             {{#prod}}
             <li>
-            <img src="images/index.png" alt="balek" height="280" width="280">
+            <img src="images/index.png" alt="image du produit" height="280" width="280">
             <h3>{{nom}}</h3>
             <div class="catinfo" style="display: flex; justify-content: space-between;">
-                <p class="price"> Prix : {{prix}}</p>
-                <p class="stock"> Disponibilités:{{stock}}</p>
+                <p class="price"> Prix : {{prix_unitaire}} €</p>
+                <p class="stock"> Disponibilités:{{unites_en_stock}}</p>
             </div>
-            <button class="addcart" onclick="ajouterPan({{reference}}, {{prix}})" height="10px">Ajouter au panier</button>
+            <button class="addcart" onclick="ajouterPan({{reference}}, {{prix_unitaire}})" height="10px">Ajouter au panier</button>
         </li>
         {{/prod}}
         </script>

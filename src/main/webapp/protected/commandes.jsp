@@ -1,10 +1,6 @@
-<%-- 
-    Document   : commandes
-    Created on : 12 déc. 2019, 17:58:54
-    Author     : Admin
---%>
-
+  
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -12,7 +8,7 @@
         <!-- On charge le moteur de template mustache https://mustache.github.io/ -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/0.8.1/mustache.min.js"></script>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <title>Panel Client</title>
         <script>
             $(document).ready(// Exécuté à la fin du chargement de la page
                     function () {
@@ -58,6 +54,7 @@
                             }
                 });
             }
+            
             // Fonction qui traite les erreurs de la requête
             function showError(xhr, status, message) {
                 alert(JSON.parse(xhr.responseText).message);
@@ -65,87 +62,100 @@
         </script>
     </head>
     <body>
-        
+
         <h1 id="user" style="display:none;">${code}</h1>
 
         <a href="../index.jsp"><button>Menu</button></a>
+
         
+        <h1> Mes commandes </h1>
         <div class="commands">
 
         </div>
 
+        <h1> Editer mes informations personnelles </h1>
+        
         <div class="persodata">
 
         </div>
+        <br>
+        
+        <button>Modifier mes informations personnelles</button>
+        
+        <br>
+        <br>
+        <form action="<c:url value="../ConnexionController"/>" method="POST"> 
+            <input type='submit' name='action' value='logout'>
+    </form>
 
-        <style type="text/css">
+    <style type="text/css">
 
-            td {
-                border: 2px double grey;
-                padding: 2px 5px;
-            }
+        td {
+            border: 2px double grey;
+            padding: 2px 5px;
+        }
 
-        </style>
+    </style>
 
-        <script id="commandsTemplate" type="text/template">
-            
-            <table>
-                <tr>
-                <td>Numero de commande</td>
-                <td>Destinataire</td>
-                <td>Adresse de livraison</td>
-                <td>Pays</td>
-                </tr>
-            {{#commands}}
+    <script id="commandsTemplate" type="text/template">
+
+        <table>
         <tr>
-            <td>{{numero}}</td>
-            <td>{{destinataire}}</td>
-            <td>{{adresse_livraison}}, {{ville_livraison}}, {{code_postal_livrais}}</td>
-            <td>{{pays_livraison}}</td>
+        <td>Numero de commande</td>
+        <td>Destinataire</td>
+        <td>Adresse de livraison</td>
+        <td>Pays</td>
+        </tr>
+        {{#commands}}
+        <tr>
+        <td>{{numero}}</td>
+        <td>{{destinataire}}</td>
+        <td>{{adresse_livraison}}, {{ville_livraison}}, {{code_postal_livrais}}</td>
+        <td>{{pays_livraison}}</td>
         </tr>
         {{/commands}}
-    </table>
-        </script>
+        </table>
+    </script>
 
-        <script id="personnaldata" type="text/template">
-            <form>
-            {{#info}}
-                <div class="data">
-                    <label>Nom</label>
-                    <input type="text" placeholder="{{contact}}">
+    <script id="personnaldata" type="text/template">
+        <form>
+        {{#info}}
+        <div class="data">
+        <label>Nom</label>
+        <input type="text" placeholder="{{contact}}">
 
-                    <label>Adresse</label>
-                    <input type="text" placeholder="{{adresse}}">
-                </div>
-                
-                <div class="data">
-                    <label>Ville</label>
-                    <input type="text" placeholder="{{ville}}">
+        <label>Adresse</label>
+        <input type="text" placeholder="{{adresse}}">
+        </div>
 
-                    <label>Code Postal</label>
-                    <input type="text" placeholder="{{code_postal}}">
+        <div class="data">
+        <label>Ville</label>
+        <input type="text" placeholder="{{ville}}">
 
-                    <label>Pays</label>
-                    <input type="text" placeholder="{{pays}}">
-                </div>
-                
-                <div class="data">
-                    <label>Telephone</label>
-                    <input type="text" placeholder="{{telephone}}">
+        <label>Code Postal</label>
+        <input type="text" placeholder="{{code_postal}}">
 
-                    <label>Fax</label>
-                    <input type="text" placeholder="{{fax}}">
-                </div>
-                
-                <div class="data">
-                    <label>Société</label>
-                    <input type="text" placeholder="{{societe}}">
+        <label>Pays</label>
+        <input type="text" placeholder="{{pays}}">
+        </div>
 
-                    <label>Fonction</label>
-                    <input type="text" placeholder="{{fonction}}">
-                </div>
-            {{/info}}
-            </form>
-        </script>
-    </body>
+        <div class="data">
+        <label>Telephone</label>
+        <input type="text" placeholder="{{telephone}}">
+
+        <label>Fax</label>
+        <input type="text" placeholder="{{fax}}">
+        </div>
+
+        <div class="data">
+        <label>Société</label>
+        <input type="text" placeholder="{{societe}}">
+
+        <label>Fonction</label>
+        <input type="text" placeholder="{{fonction}}">
+        </div>
+        {{/info}}
+        </form>
+    </script>
+</body>
 </html>

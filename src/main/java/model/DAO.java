@@ -219,9 +219,9 @@ public class DAO {
         return result;
     }
 
-    public ClientEntity showClient(String code) throws SQLException {
+    public List<ClientEntity> showClient(String code) throws SQLException {
 
-        ClientEntity client = null;
+        List<ClientEntity> client = new LinkedList();
         String sql = "SELECT * FROM APP.CLIENT WHERE CODE = ?";
 
         try (Connection connection = myDataSource.getConnection(); // Ouvrir une connexion
@@ -242,9 +242,9 @@ public class DAO {
                 String pays = rs.getString("PAYS");
                 String telephone = rs.getString("TELEPHONE");
                 String fax = rs.getString("FAX");
-                client = new ClientEntity(nom, societe, contact,
+                client.add( new ClientEntity(nom, societe, contact,
                         fonction, adresse, ville, region, code_postal, pays,
-                        telephone, fax);
+                        telephone, fax));
             }
 
         } catch (SQLException error) {
