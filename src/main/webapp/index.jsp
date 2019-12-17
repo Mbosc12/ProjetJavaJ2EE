@@ -221,7 +221,7 @@
                     </table>
                     <br><label>Prix du panier total</label> : <label id = "prixTotal"></label> €
                     <label id = "nbreLignes" hidden>0</label><br><br>
-                    <a href="/protected/validation.jsp"><button>Valider le panier</button></a>
+                    <a href="protected/validation.jsp"><button>Valider le panier</button></a>
                 </article>
             </div>
         </section>
